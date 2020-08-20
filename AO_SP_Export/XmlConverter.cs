@@ -8,10 +8,7 @@ namespace AO_SP_Export
     {
         internal static XmlDocument GetManifestXml(List<EzineItem> ezineItemsForExport)
         {
-            var document = new XmlDocument();
-
-            XmlDeclaration xmlDeclaration = document.CreateXmlDeclaration("1.0", "UTF-8", null);
-            document.AppendChild(xmlDeclaration);
+            var document = XmlHelper.CreateDefaultDocument();
 
             var spObjects = document.CreateElement("SPObjects");
 
@@ -286,6 +283,97 @@ namespace AO_SP_Export
             }
 
             document.AppendChild(spObjects);
+            return document;
+        }
+
+        internal static XmlDocument GetRequirements()
+        {
+            var document = XmlHelper.CreateDefaultDocument();
+
+            var requirements = document.CreateElement("Requirements");
+
+            var requirement = document.CreateElement("Requirement");
+            requirement.SetAttribute("Type", "Language");
+            requirement.SetAttribute("Id", "1033");
+            requirement.SetAttribute("Name", "English");
+
+            requirements.AppendChild(requirement);
+            document.AppendChild(requirements);
+            return document;
+        }
+
+        internal static XmlDocument GetExportSettings(int increment)
+        {
+            var document = XmlHelper.CreateDefaultDocument();
+
+            var exportSettings = document.CreateElement("ExportSettings");
+            exportSettings.SetAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            exportSettings.SetAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
+            exportSettings.SetAttribute("SiteUrl", "http://global.intranet.allenovery.com/");
+            exportSettings.SetAttribute("FileLocation", @"c:\temp");
+            exportSettings.SetAttribute("BaseFileName", $"Import{increment}.cmp");
+            exportSettings.SetAttribute("IncludeSecurity", "None");
+            exportSettings.SetAttribute("IncludeVersions", "LastMajor");
+            exportSettings.SetAttribute("ExportPublicSchema", "true");
+            exportSettings.SetAttribute("ExportFrontEndFileStreams", "true");
+            exportSettings.SetAttribute("ExportMethod", "ExportAll");
+            exportSettings.SetAttribute("ExcludeDependencies", "true");
+            exportSettings.SetAttribute("xmlns", "urn:deployment-exportsettings-schema");
+
+            var exportObjects = document.CreateElement("ExportObjects");
+
+            var deploymentObject = document.CreateElement("DeploymentObject");
+            deploymentObject.SetAttribute("Id", "5f84a434-ada7-42eb-9af3-83a1c6907365");
+            deploymentObject.SetAttribute("Type", "Web");
+            deploymentObject.SetAttribute("ParentId", "00000000-0000-0000-0000-000000000000");
+            deploymentObject.SetAttribute("Url", "/Europe/Netherlands");
+            deploymentObject.SetAttribute("ExcludeChildren", "false");
+            deploymentObject.SetAttribute("IncludeDescendants", "All");
+
+            exportObjects.AppendChild(deploymentObject);
+            exportSettings.AppendChild(exportObjects);
+            document.AppendChild(exportSettings);
+            return document;
+        }
+
+        internal static XmlDocument GetSystemData(int numOfExportItems)
+        {
+            var document = XmlHelper.CreateDefaultDocument();
+
+            var systemData = document.CreateElement("SystemData");
+            systemData.SetAttribute("xmlns", "urn:deployment-systemdata-schema");
+
+            var schemaVersion = document.CreateElement("SchemaVersion");
+            schemaVersion.SetAttribute("Version", "14.0.0.0");
+            schemaVersion.SetAttribute("Build", "14.0.7143.5000");
+            schemaVersion.SetAttribute("DatabaseVersion", "13650364");
+            schemaVersion.SetAttribute("SiteVersion", "0");
+            schemaVersion.SetAttribute("ObjectsProcessed", numOfExportItems.ToString());
+
+            var manifestFiles = document.CreateElement("ManifestFiles");
+            var manifestFile = document.CreateElement("ManifestFile");
+            manifestFile.SetAttribute("Name", "Manifest.xml");
+
+            var systemObjects = document.CreateElement("SystemObjects");
+
+/*            var systemObject = document.CreateElement("SystemObject");
+            systemObject.SetAttribute("Id", "1a293eb8-2b49-40cd-832d-166d5ae70861");
+            systemObject.SetAttribute("Type", "Folder");
+            systemObject.SetAttribute("Url", "/Locations/Europe/Netherlands/NL Corporate/images");
+
+            systemObjects.AppendChild(systemObject);
+            */
+            var rootWebOnlyLists = document.CreateElement("RootWebOnlyLists");
+
+            manifestFiles.AppendChild(manifestFile);
+
+            systemData.AppendChild(schemaVersion);
+            systemData.AppendChild(manifestFiles);
+            systemData.AppendChild(systemObjects);
+            systemData.AppendChild(rootWebOnlyLists);
+
+            document.AppendChild(systemData);
+
             return document;
         }
     }

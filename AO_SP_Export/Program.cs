@@ -6,10 +6,17 @@ namespace AO_SP_Export
     {
         static void Main(string[] args)
         {
-            var ezineId = 209; // Corporate Know-How
-            var fileName = @"C:\Users\ingri\OneDrive - iLLUMiON\A&O MIGRATIE\" + DateTime.Now.ToString("yyyymmdd_HHMMss") + "_Manifest.xml";
+            const int increment = 7;
 
-            ExportXml.Run(ezineId, fileName);
+            var ezineId = 209; // Corporate Know-How
+            var directory = $@"C:\Users\ingri\OneDrive - iLLUMiON\A&O MIGRATIE\{increment} {DateTime.Now.ToString("yyyyMMdd_HHmmss")}\\";
+
+            if (!System.IO.Directory.Exists(directory))
+            {
+                System.IO.Directory.CreateDirectory(directory);
+            }
+
+            ExportXml.Run(ezineId, directory, increment);
         }
     }
 }
