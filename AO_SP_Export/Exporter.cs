@@ -8,13 +8,13 @@ namespace AO_SP_Export
 {
     internal class Exporter
     {
-        internal static List<EzineItem> GetItems(int ezineId)
+        internal static List<EzineItem> GetItems(int ezineId, int numOfItems)
         {
             var output = new List<EzineItem>();
 
             using (var connection = new SqlConnection("Server=.;Integrated Security=true;Database=Nieuwsoverzicht"))
             {
-                string sql = $@"SELECT TOP 10 i.ItemId, i.Title, i.[Description], itd.[Data], i.CreatedDate, i.ModifiedDate, u.Email, images.[Data], images.[FileName]
+                string sql = $@"SELECT TOP {numOfItems} i.ItemId, i.Title, i.[Description], itd.[Data], i.CreatedDate, i.ModifiedDate, u.Email, images.[Data], images.[FileName]
 FROM vwItems i
 	INNER JOIN [types] t on i.typeid = t.TypeID
 	INNER JOIN vwItemRelations ir ON ir.IDTo = i.ItemID

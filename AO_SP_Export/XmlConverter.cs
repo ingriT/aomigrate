@@ -18,110 +18,165 @@ namespace AO_SP_Export
                 spObject.SetAttribute("Id", item.GuidId.ToString());
                 spObject.SetAttribute("ObjectType", "SPListItem");
                 spObject.SetAttribute("ParentId", item.ParentId);
-                spObject.SetAttribute("ParentWebId", item.ParentWebId);
-                spObject.SetAttribute("ParentWebUrl", item.ParentWebUrl);
+                //                spObject.SetAttribute("ParentWebId", item.ParentWebId);
+                //                spObject.SetAttribute("ParentWebUrl", item.ParentWebUrl);
                 spObject.SetAttribute("Url", item.Url);
 
                 var listItem = document.CreateElement("ListItem");
-                listItem.SetAttribute("FileUrl", item.FileUrl);
-                listItem.SetAttribute("DocType", "File");
-                listItem.SetAttribute("ParentFolderId", item.ParentFolderId);
-                listItem.SetAttribute("Order", item.Order.ToString());
+                listItem.SetAttribute("BaseTemplate", "GenericList");
                 listItem.SetAttribute("Id", item.GuidId.ToString());
                 listItem.SetAttribute("ParentWebId", item.ParentWebId);
-                listItem.SetAttribute("ParentListId", item.ParentListId);
-                listItem.SetAttribute("Name", item.Name);
-                listItem.SetAttribute("DirName", item.DirName);
-                listItem.SetAttribute("IntId", item.Id.ToString());
-                listItem.SetAttribute("DocId", item.DocId.ToString());
-                listItem.SetAttribute("Version", item.Version);
-                listItem.SetAttribute("ContentTypeId", item.ContentTypeId);
-                listItem.SetAttribute("Author", item.Author);
-                listItem.SetAttribute("ModifiedBy", item.ModiiedBy);
-                listItem.SetAttribute("TimeLastModified", item.ModifiedOn.ToString("yyyy-MM-dd") + "T" + item.ModifiedOn.ToString("hh:mm:ss"));
-                listItem.SetAttribute("TimeCreated", item.CreatedOn.ToString("yyyy-MM-dd") + "T" + item.CreatedOn.ToString("hh:mm:ss"));
-                listItem.SetAttribute("ModerationStatus", "Approved");
+                listItem.SetAttribute("RootFolderUrl", "/Locations/Europe/Netherlands/NL Corporate/my-ao/_catalogs/masterpage");
+                listItem.SetAttribute("TItle", item.Name);
+                
+                //listItem.SetAttribute("Author", item.Author);
+                //listItem.SetAttribute("ContentTypeId", item.ContentTypeId);
+                //listItem.SetAttribute("DirName", item.DirName);
+                //listItem.SetAttribute("DocId", item.DocId.ToString());
+                //listItem.SetAttribute("DocType", "File");
+                //listItem.SetAttribute("FileUrl", item.FileUrl);
+                //listItem.SetAttribute("IntId", item.Id.ToString());
+                //listItem.SetAttribute("ModifiedBy", item.ModiiedBy);
+                //listItem.SetAttribute("ModerationStatus", "Approved");
+                //listItem.SetAttribute("Name", item.Name);
+                //listItem.SetAttribute("Order", item.Order.ToString());
+                //listItem.SetAttribute("ParentFolderId", item.ParentFolderId);
+                //listItem.SetAttribute("ParentListId", item.ParentListId);
+                //listItem.SetAttribute("TimeCreated", item.CreatedOn.ToString("yyyy-MM-dd") + "T" + item.CreatedOn.ToString("hh:mm:ss"));
+                //listItem.SetAttribute("TimeLastModified", item.ModifiedOn.ToString("yyyy-MM-dd") + "T" + item.ModifiedOn.ToString("hh:mm:ss"));
+                //listItem.SetAttribute("Version", item.Version);
 
                 var fields = document.CreateElement("Fields");
 
-                var field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "_ModerationComments"); field1.SetAttribute("FieldId", "34ad21eb-75bd-4544-8c73-0e08330291fe");
-                fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "Modified_x0020_By"); field1.SetAttribute("FieldId", "822c78e3-1ea9-4943-b449-57863ad33ca9"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "Created_x0020_By"); field1.SetAttribute("FieldId", "4dd7e525-8d6b-4cb4-9d3e-44ee25f973eb"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "File_x0020_Type"); field1.SetAttribute("Value", "aspx"); field1.SetAttribute("FieldId", "39360f11-34cf-4356-9945-25c44e68dade"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "HTML_x0020_File_x0020_Type"); field1.SetAttribute("FieldId", "0c5e0085-eb30-494b-9cdd-ece1d3c649a2"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "_SourceUrl");
-                field1.SetAttribute("FieldId", "c63a459d-54ba-4ab7-933a-dcf1c6fadec2"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "_SharedFileIndex"); field1.SetAttribute("FieldId", "034998e9-bf1c-4288-bbbd-00eacfc64410"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "Title"); field1.SetAttribute("Value", "Spoedwet Justitie en Veiligheid in werking getreden - Wet en regelgeving update"); field1.SetAttribute("FieldId", "fa564e0f-0c70-4ab9-b863-0177e6ddd247"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "TemplateUrl"); field1.SetAttribute("FieldId", "4b1bf6c6-4f39-45ac-acd5-16fe7a214e5e"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "xd_ProgID"); field1.SetAttribute("FieldId", "cd1ecb9f-dd4e-4f29-ab9e-e9ff40048d64"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "xd_Signature"); field1.SetAttribute("FieldId", "fbf29b2d-cae5-49aa-8e0a-29955b540122"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "Comments"); field1.SetAttribute("FieldId", "9da97a8a-1da5-4a77-98d3-4bc10456e700"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingStartDate"); field1.SetAttribute("FieldId", "51d39414-03dc-4bd0-b777-d3e20cb350f7"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingExpirationDate"); field1.SetAttribute("FieldId", "a990e64f-faa3-49c1-aafa-885fda79de62"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingContact"); field1.SetAttribute("Value", "13590;UserInfo"); field1.SetAttribute("FieldId", "aea1a4dd-0f19-417d-8721-95a1d28762ab"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingContactEmail"); field1.SetAttribute("FieldId", "c79dba91-e60b-400e-973d-c6d06f192720"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingContactName"); field1.SetAttribute("FieldId", "7546ad0d-6c33-4501-b470-fb3003ca14ba"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingContactPicture"); field1.SetAttribute("FieldId", "dc47d55f-9bf9-494a-8d5b-e619214dd19a"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingPageLayout"); field1.SetAttribute("Value", "/_catalogs/masterpage/AOTeamNewsPage.aspx"); field1.SetAttribute("Value2", "AO Team News Page"); field1.SetAttribute("FieldId", "0f800910-b30d-4c8f-b011-8189b2297094"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingVariationGroupID"); field1.SetAttribute("FieldId", "914fdb80-7d4f-4500-bf4c-ce46ad7484a4"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingVariationRelationshipLinkFieldID"); field1.SetAttribute("FieldId", "766da693-38e5-4b1b-997f-e830b6dfcc7b"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingRollupImage"); field1.SetAttribute("FieldId", "543bc2cf-1f30-488e-8f25-6fe3b689d9ac"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "Audience"); field1.SetAttribute("FieldId", "61cbb965-1e04-4273-b658-eedaa662f48d"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
-                field1.SetAttribute("Name", "PublishingPageImage"); field1.SetAttribute("FieldId", "3de94b06-4120-41a5-b907-88773e493458"); fields.AppendChild(field1);
-
-                field1 = document.CreateElement("Field");
+                /*var field1 = document.CreateElement("Field");
                 field1.SetAttribute("Name", "PublishingPageContent");
                 field1.SetAttribute("Value", item.Content);
                 field1.SetAttribute("FieldId", "f55c4d88-1f2e-4ad9-aaa8-819af4ee7ee8");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "_ModerationComments");
+                field1.SetAttribute("FieldId", "34ad21eb-75bd-4544-8c73-0e08330291fe");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "Modified_x0020_By");
+                field1.SetAttribute("FieldId", "822c78e3-1ea9-4943-b449-57863ad33ca9");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "Created_x0020_By");
+                field1.SetAttribute("FieldId", "4dd7e525-8d6b-4cb4-9d3e-44ee25f973eb");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "File_x0020_Type");
+                field1.SetAttribute("Value", "aspx");
+                field1.SetAttribute("FieldId", "39360f11-34cf-4356-9945-25c44e68dade");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "HTML_x0020_File_x0020_Type");
+                field1.SetAttribute("FieldId", "0c5e0085-eb30-494b-9cdd-ece1d3c649a2");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "_SourceUrl");
+                field1.SetAttribute("FieldId", "c63a459d-54ba-4ab7-933a-dcf1c6fadec2");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "_SharedFileIndex");
+                field1.SetAttribute("FieldId", "034998e9-bf1c-4288-bbbd-00eacfc64410");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "Title");
+                field1.SetAttribute("Value", "Spoedwet Justitie en Veiligheid in werking getreden - Wet en regelgeving update");
+                field1.SetAttribute("FieldId", "fa564e0f-0c70-4ab9-b863-0177e6ddd247");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "TemplateUrl");
+                field1.SetAttribute("FieldId", "4b1bf6c6-4f39-45ac-acd5-16fe7a214e5e");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "xd_ProgID");
+                field1.SetAttribute("FieldId", "cd1ecb9f-dd4e-4f29-ab9e-e9ff40048d64");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "xd_Signature");
+                field1.SetAttribute("FieldId", "fbf29b2d-cae5-49aa-8e0a-29955b540122");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "Comments");
+                field1.SetAttribute("FieldId", "9da97a8a-1da5-4a77-98d3-4bc10456e700");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingStartDate");
+                field1.SetAttribute("FieldId", "51d39414-03dc-4bd0-b777-d3e20cb350f7");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingExpirationDate");
+                field1.SetAttribute("FieldId", "a990e64f-faa3-49c1-aafa-885fda79de62");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingContact");
+                field1.SetAttribute("Value", "13590;UserInfo");
+                field1.SetAttribute("FieldId", "aea1a4dd-0f19-417d-8721-95a1d28762ab");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingContactEmail");
+                field1.SetAttribute("FieldId", "c79dba91-e60b-400e-973d-c6d06f192720");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingContactName");
+                field1.SetAttribute("FieldId", "7546ad0d-6c33-4501-b470-fb3003ca14ba");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingContactPicture");
+                field1.SetAttribute("FieldId", "dc47d55f-9bf9-494a-8d5b-e619214dd19a");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingPageLayout");
+                field1.SetAttribute("Value", "/_catalogs/masterpage/AOTeamNewsPage.aspx");
+                field1.SetAttribute("Value2", "AO Team News Page");
+                field1.SetAttribute("FieldId", "0f800910-b30d-4c8f-b011-8189b2297094");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingVariationGroupID");
+                field1.SetAttribute("FieldId", "914fdb80-7d4f-4500-bf4c-ce46ad7484a4");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingVariationRelationshipLinkFieldID");
+                field1.SetAttribute("FieldId", "766da693-38e5-4b1b-997f-e830b6dfcc7b");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingRollupImage");
+                field1.SetAttribute("FieldId", "543bc2cf-1f30-488e-8f25-6fe3b689d9ac");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "Audience");
+                field1.SetAttribute("FieldId", "61cbb965-1e04-4273-b658-eedaa662f48d");
+                fields.AppendChild(field1);
+
+                field1 = document.CreateElement("Field");
+                field1.SetAttribute("Name", "PublishingPageImage");
+                field1.SetAttribute("FieldId", "3de94b06-4120-41a5-b907-88773e493458");
                 fields.AppendChild(field1);
 
                 field1 = document.CreateElement("Field");
@@ -273,7 +328,7 @@ namespace AO_SP_Export
 
                 field1 = document.CreateElement("Field");
                 field1.SetAttribute("Name", "Categories"); field1.SetAttribute("FieldId", "9ebcd900-9d05-46c8-8f4d-e46e87328844"); fields.AppendChild(field1);
-
+                */
 
                 listItem.AppendChild(fields);
 
@@ -356,13 +411,13 @@ namespace AO_SP_Export
 
             var systemObjects = document.CreateElement("SystemObjects");
 
-/*            var systemObject = document.CreateElement("SystemObject");
-            systemObject.SetAttribute("Id", "1a293eb8-2b49-40cd-832d-166d5ae70861");
-            systemObject.SetAttribute("Type", "Folder");
-            systemObject.SetAttribute("Url", "/Locations/Europe/Netherlands/NL Corporate/images");
+            /*            var systemObject = document.CreateElement("SystemObject");
+                        systemObject.SetAttribute("Id", "1a293eb8-2b49-40cd-832d-166d5ae70861");
+                        systemObject.SetAttribute("Type", "Folder");
+                        systemObject.SetAttribute("Url", "/Locations/Europe/Netherlands/NL Corporate/images");
 
-            systemObjects.AppendChild(systemObject);
-            */
+                        systemObjects.AppendChild(systemObject);
+                        */
             var rootWebOnlyLists = document.CreateElement("RootWebOnlyLists");
 
             manifestFiles.AppendChild(manifestFile);

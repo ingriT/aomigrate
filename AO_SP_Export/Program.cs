@@ -6,7 +6,8 @@ namespace AO_SP_Export
     {
         static void Main(string[] args)
         {
-            const int increment = 7;
+            const int increment = 8;
+            const int numOfItems = 1;
 
             var ezineId = 209; // Corporate Know-How
             var directory = $@"C:\Users\ingri\OneDrive - iLLUMiON\A&O MIGRATIE\{increment} {DateTime.Now.ToString("yyyyMMdd_HHmmss")}\\";
@@ -16,7 +17,7 @@ namespace AO_SP_Export
                 System.IO.Directory.CreateDirectory(directory);
             }
 
-            ExportXml.Run(ezineId, directory, increment);
+            ExportXml.Run(ezineId, directory, numOfItems, increment);
         }
     }
 }

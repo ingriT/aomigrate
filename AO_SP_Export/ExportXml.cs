@@ -4,10 +4,10 @@ namespace AO_SP_Export
 {
     internal class ExportXml
     {
-        internal static void Run(int ezineId, string directory, int increment)
+        internal static void Run(int ezineId, string directory, int numOfItems, int increment)
         {
             // Get some items from the database
-            var ezineItemsForExport = Exporter.GetItems(ezineId);
+            var ezineItemsForExport = Exporter.GetItems(ezineId, numOfItems);
 
             // Convert them to manifest.xml
             var manifest = XmlConverter.GetManifestXml(ezineItemsForExport);
