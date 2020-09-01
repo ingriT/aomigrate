@@ -8,13 +8,36 @@ namespace AO_SP_Export
 {
     internal class Exporter
     {
+        private const string ConnectionStringOld = "Server=.;Integrated Security=true;Database=Nieuwsoverzicht";
+
+        internal static string GetEzineTitle(int ezineId)
+        {
+            using (var connection = new SqlConnection(ConnectionStringOld))
+            {
+                string sql = $@"SELECT i.Title FROM vwItems i WHERE i.ItemId = @ezineId";
+
+                return connection.ExecuteScalar<string>(sql, new { ezineId = ezineId });
+            }
+        }
+
         internal static List<EzineItem> GetItems(int ezineId, int numOfItems)
         {
             var output = new List<EzineItem>();
 
-            using (var connection = new SqlConnection("Server=.;Integrated Security=true;Database=Nieuwsoverzicht"))
+            using (var connection = new SqlConnection(ConnectionStringOld))
             {
-                string sql = $@"SELECT TOP {numOfItems} i.ItemId, i.Title, i.[Description], itd.[Data], i.CreatedDate, i.ModifiedDate, u.Email, images.[Data], images.[FileName]
+                string sql = $@"
+SELECT TOP {numOfItems} 
+    i.ItemId, 
+    i.Title, 
+    i.[Description], 
+    itd.[Data], 
+    i.CreatedDate, 
+    i.ModifiedDate, 
+    u.Email AS Author, 
+    images.[Data] AS ImageData, 
+    images.[FileName] AS ImageFileName, 
+    tag.[Value] AS TagValue
 FROM vwItems i
 	INNER JOIN [types] t on i.typeid = t.TypeID
 	INNER JOIN vwItemRelations ir ON ir.IDTo = i.ItemID
@@ -22,12 +45,14 @@ FROM vwItems i
 	INNER JOIN vwUsers u ON u.UserId = i.CreatedUserID
 	LEFT JOIN vwImages images ON i.ImageGUID = images.ImageGUID
 	LEFT JOIN vwItemTextData itd ON itd.ItemId = i.ItemID
+    LEFT JOIN vwItemTags it ON it.ItemId = i.ItemId
+    LEFT JOIN vwTags tag ON tag.TagId = it.TagId
 WHERE t.Code = 'EZINE_ITEM' AND iParent.ItemId = @ezineId
 ORDER BY CreatedDate DESC";
 
                 var items = connection.Query(sql, new { ezineId = ezineId }).ToList();
 
-                foreach(var item in items)
+                foreach (var item in items)
                 {
                     var content = item.Description;
                     if (!string.IsNullOrEmpty(item.Data))
@@ -35,7 +60,8 @@ ORDER BY CreatedDate DESC";
                         content = content + item.Data;
                     }
 
-                    var ezineItem = new EzineItem(item.ItemId, item.Title, content, item.CreatedDate, item.ModifiedDate);
+                    var ezineItem = new EzineItem(item.ItemId, item.Title, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, item.TagValue,
+                        item.CreatedDate, item.ModifiedDate);
 
                     output.Add(ezineItem);
                 }

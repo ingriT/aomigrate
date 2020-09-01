@@ -28,10 +28,26 @@ namespace AO_SP_Export
         internal readonly string DirName;
 
         internal readonly DateTime CreatedOn;
-        internal readonly DateTime ModifiedOn;
+        internal readonly DateTime? ModifiedOn;
 
-        internal EzineItem(int id, string title, string content, DateTime createdOn, DateTime modifiedOn)
+        internal readonly string Description;
+        internal readonly string Data;
+        internal readonly string AuthorEmail;
+
+        internal readonly byte[] ImageData;
+        internal readonly string ImageFileName;
+        internal readonly string TagValue;
+
+        internal EzineItem(int id, string title, string content, string description, string data, string authorEmail, byte[] imageData, string imageFileName, string tagValue, 
+            DateTime createdOn, DateTime? modifiedOn)
         {
+            this.Description = description;
+            this.Data = data;
+            this.AuthorEmail = authorEmail;
+            this.ImageData = imageData;
+            this.ImageFileName = imageFileName;
+            this.TagValue = tagValue;
+
             this.Id = id;
             this.Title = title;
             this.Content = content;
