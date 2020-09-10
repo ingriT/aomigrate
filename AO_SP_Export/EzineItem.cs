@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 
 namespace AO_SP_Export
 {
@@ -7,6 +8,7 @@ namespace AO_SP_Export
         internal readonly int Id;
         internal readonly string Title;
         internal readonly string Content;
+        internal readonly string ContentInnerText;
 
         internal readonly Guid GuidId;
         internal readonly Guid DocId;
@@ -51,6 +53,7 @@ namespace AO_SP_Export
             this.Id = id;
             this.Title = title;
             this.Content = content;
+            this.ContentInnerText = StripHtml(content);
             this.CreatedOn = createdOn;
             this.ModifiedOn = modifiedOn;
 
@@ -79,6 +82,13 @@ namespace AO_SP_Export
             this.Url = ParentWebUrl + FileUrl;
 
             this.DirName = "Locations/Europe/Netherlands/NL Corporate/Pages";
+        }
+
+        private string StripHtml(string content)
+        {
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(content);
+            return htmlDoc.DocumentNode.InnerText;
         }
     }
 }

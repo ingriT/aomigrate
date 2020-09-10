@@ -38,15 +38,20 @@ namespace AO_SP_Export
                 }
 
                 sql = $@"
+IF (EXISTS (SELECT * 
+                 FROM INFORMATION_SCHEMA.TABLES 
+                 WHERE TABLE_SCHEMA = 'dbo' 
+                 AND  TABLE_NAME = '{tableName}'))
+BEGIN
+    DROP TABLE {tableName}
+END
+
 CREATE TABLE {tableName} (
-    UniqueId UNIQUEIDENTIFIER,
-    ItemId INT,
+    Id INT IDENTITY (1,1),
     Title VARCHAR(MAX),
     Content VARCHAR(MAX),
-    [Description] VARCHAR(MAX),
-    [Data] VARCHAR(MAX),
+    ContentInnerText VARCHAR(MAX),
     AuthorEmail VARCHAR(MAX),
-    ImageData VARBINARY(MAX),
     ImageFileName VARCHAR(MAX),
     TagValue VARCHAR(MAX),
     CreatedOn DATETIME,
@@ -58,19 +63,15 @@ CREATE TABLE {tableName} (
                 foreach (var item in ezineItems)
                 {
                     sql = $@"
-INSERT INTO {tableName} (UniqueId, ItemId, Title, Content, [Description], [Data], AuthorEmail, ImageData, ImageFileName, TagValue, CreatedOn, ModifiedOn)
-VALUES (@itemGuid, @itemId, @title, @content, @description, @data, @authorEmail, @imageData, @imageFileName, @tagValue, @createdOn, @modifiedOn)";
+INSERT INTO {tableName} (Title, Content, ContentInnerText, AuthorEmail, ImageFileName, TagValue, CreatedOn, ModifiedOn)
+VALUES (@title, @content, @contentInnerText, @authorEmail, @imageFileName, @tagValue, @createdOn, @modifiedOn)";
 
                     connection.Execute(sql, new
                     {
-                        itemGuid = item.GuidId,
-                        itemId = item.Id,
                         title = item.Title,
                         content = item.Content,
-                        description = item.Description,
-                        data = item.Data,
+                        contentInnerText = item.ContentInnerText,
                         authorEmail = item.AuthorEmail,
-                        imageData = item.ImageData,
                         imageFileName = item.ImageFileName,
                         tagValue = item.TagValue,
                         createdOn = item.CreatedOn,

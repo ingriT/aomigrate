@@ -9,7 +9,7 @@ namespace AO_SP_Export
             var xmlExport = false;
 
             var ezineId = 209; // Corporate Know-How
-            const int numOfItems = Int32.MaxValue;
+            const int numOfItems = 50; //Int32.MaxValue;
 
             if (xmlExport)
             {
