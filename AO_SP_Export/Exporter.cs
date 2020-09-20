@@ -54,6 +54,8 @@ ORDER BY CreatedDate DESC";
 
                 foreach (var item in items)
                 {
+                    var attachments = GetAttachments(connection, item.ItemId);
+
                     var content = item.Description;
                     if (!string.IsNullOrEmpty(item.Data))
                     {
@@ -61,13 +63,39 @@ ORDER BY CreatedDate DESC";
                     }
 
                     var ezineItem = new EzineItem(item.ItemId, item.Title, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, item.TagValue,
-                        item.CreatedDate, item.ModifiedDate);
+                        item.CreatedDate, item.ModifiedDate, attachments);
 
                     output.Add(ezineItem);
                 }
             }
 
             return output;
+        }
+
+        private static List<ItemAttachment> GetAttachments(SqlConnection connection, int itemId)
+        {
+            var attachments = new List<ItemAttachment>();
+
+            string sql = $@"
+SELECT i.ItemId, i.Title, ibd.[FileName], ibd.[Data], ft.MimeType, ft.Extension
+FROM vwItemRelations ir 
+	INNER JOIN vwItems i on i.ItemId = ir.IDTo
+	INNER JOIN vwItemBinaryData ibd on ibd.ItemID = i.ItemID
+	INNER JOIN FileTypes ft on ft.FileTypeID = ibd.FileTypeID
+	INNER JOIN [Types] t ON t.TypeId = ir.TypeID
+WHERE t.Code = 'REL_DOCUMENT' AND
+	ir.IdFrom = @itemId";
+
+            var itemAttachments = connection.Query(sql, new { itemId }).ToList();
+
+            foreach (var itemAttachment in itemAttachments)
+            {
+                var attachment = new ItemAttachment(itemAttachment.ItemId, itemAttachment.Title, itemAttachment.Data, itemAttachment.FileName, itemAttachment.MimeType);
+
+                attachments.Add(attachment);
+            }
+
+            return attachments;
         }
     }
 }

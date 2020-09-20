@@ -9,7 +9,7 @@ namespace AO_SP_Export
             var xmlExport = false;
 
             var ezineId = 209; // Corporate Know-How
-            const int numOfItems = 50; //Int32.MaxValue;
+            const int numOfItems = 10; //Int32.MaxValue;
 
             if (xmlExport)
             {
@@ -37,8 +37,8 @@ namespace AO_SP_Export
                 ezineId = 201; // Tax alert
                 DBImporter.Run(ezineId, numOfItems);
 
-                ezineId = 272; // Global Tax
-                DBImporter.Run(ezineId, numOfItems);
+//                ezineId = 272; // Global Tax
+//                DBImporter.Run(ezineId, numOfItems);
 
                 ezineId = 205; // Bibliotheek
                 DBImporter.Run(ezineId, numOfItems);

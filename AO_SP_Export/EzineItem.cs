@@ -1,8 +1,31 @@
 ﻿using HtmlAgilityPack;
 using System;
+using System.Collections.Generic;
 
 namespace AO_SP_Export
 {
+    internal class ItemAttachment
+    {
+        internal readonly int Id;
+        internal readonly string Title;
+        internal readonly byte[] FileData;
+        internal readonly string FileName;
+        internal readonly string MimeType;
+
+        internal readonly string FileNameUrl;
+
+        internal ItemAttachment(int id, string title, byte[] fileData, string fileName, string mimeType)
+        {
+            this.Id = id;
+            this.Title = title;
+            this.FileData = fileData;
+            this.FileName = fileName;
+            this.MimeType = mimeType;
+
+            this.FileNameUrl = Guid.NewGuid().ToString().Substring(0,8) + "_" + fileName;
+        }
+    }
+
     internal class EzineItem
     {
         internal readonly int Id;
@@ -40,15 +63,24 @@ namespace AO_SP_Export
         internal readonly string ImageFileName;
         internal readonly string TagValue;
 
-        internal EzineItem(int id, string title, string content, string description, string data, string authorEmail, byte[] imageData, string imageFileName, string tagValue, 
-            DateTime createdOn, DateTime? modifiedOn)
+        internal readonly string ImageFileNameUrl;
+
+        internal readonly List<ItemAttachment> Attachments;
+
+        internal EzineItem(int id, string title, string content, string description, string data, string authorEmail, byte[] imageData, string imageFileName, string tagValue,
+            DateTime createdOn, DateTime? modifiedOn, List<ItemAttachment> attachments)
         {
             this.Description = description;
             this.Data = data;
             this.AuthorEmail = authorEmail;
             this.ImageData = imageData;
             this.ImageFileName = imageFileName;
+            this.ImageFileNameUrl = Guid.NewGuid().ToString().Substring(0, 8) + ImageFileName;
             this.TagValue = tagValue;
+
+            this.Attachments = attachments;
+
+            content = AddAttachments(content, attachments);
 
             this.Id = id;
             this.Title = title;
@@ -82,6 +114,28 @@ namespace AO_SP_Export
             this.Url = ParentWebUrl + FileUrl;
 
             this.DirName = "Locations/Europe/Netherlands/NL Corporate/Pages";
+        }
+
+        private string AddAttachments(string content, List<ItemAttachment> attachments)
+        {
+            if (attachments.Count > 0)
+            {
+                content += "<p><strong>Bijlagen:</strong></p>";
+                content += "<ul>";
+
+                foreach (var attachment in attachments)
+                {
+                    content += "<li>";
+                    content += $"<a target=\"_blank\" href=\"http://global.intranet.allenovery.com/locations/europe/netherlands/archief/{attachment.FileNameUrl}\">";
+                    content += $"{attachment.Title}";
+                    content += "</a>";
+                    content += "</li>";
+                }
+
+                content += "</ul>";
+            }
+
+            return content;
         }
 
         private string StripHtml(string content)

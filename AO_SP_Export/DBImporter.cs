@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
+using System.IO;
 
 namespace AO_SP_Export
 {
@@ -50,7 +50,6 @@ CREATE TABLE {tableName} (
     Id INT IDENTITY (1,1),
     Title VARCHAR(MAX),
     Content VARCHAR(MAX),
-    ContentInnerText VARCHAR(MAX),
     AuthorEmail VARCHAR(MAX),
     ImageFileName VARCHAR(MAX),
     TagValue VARCHAR(MAX),
@@ -62,21 +61,68 @@ CREATE TABLE {tableName} (
 
                 foreach (var item in ezineItems)
                 {
+                    var imageFileName = "";
+
+                    if (!string.IsNullOrEmpty(item.ImageFileName))
+                    {
+                        imageFileName = $"http://global.intranet.allenovery.com/locations/europe/netherlands/images/{item.ImageFileNameUrl}";
+                    }
+
                     sql = $@"
-INSERT INTO {tableName} (Title, Content, ContentInnerText, AuthorEmail, ImageFileName, TagValue, CreatedOn, ModifiedOn)
-VALUES (@title, @content, @contentInnerText, @authorEmail, @imageFileName, @tagValue, @createdOn, @modifiedOn)";
+INSERT INTO {tableName} (Title, Content, AuthorEmail, ImageFileName, TagValue, CreatedOn, ModifiedOn)
+VALUES (@title, @content, @authorEmail, @imageFileName, @tagValue, @createdOn, @modifiedOn)";
 
                     connection.Execute(sql, new
                     {
                         title = item.Title,
                         content = item.Content,
-                        contentInnerText = item.ContentInnerText,
                         authorEmail = item.AuthorEmail,
-                        imageFileName = item.ImageFileName,
+                        imageFileName = imageFileName,
                         tagValue = item.TagValue,
                         createdOn = item.CreatedOn,
                         modifiedOn = item.ModifiedOn
                     });
+                }
+
+                var filePath = @"C:\temp\ezines\archief\";
+                var imagePath = @"C:\temp\ezines\images\";
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+                if (!Directory.Exists(imagePath))
+                {
+                    Directory.CreateDirectory(imagePath);
+                }
+
+                foreach (var item in ezineItems)
+                {
+                    if (!string.IsNullOrEmpty(item.ImageFileNameUrl))
+                    {
+                        if (File.Exists(imagePath + item.ImageFileNameUrl))
+                        {
+                            throw new Exception($"{item.ImageFileNameUrl} file exists!");
+                        }
+
+                        using (var fs = new FileStream(imagePath + item.ImageFileNameUrl, FileMode.Create, FileAccess.Write))
+                        {
+                            fs.Write(item.ImageData, 0, item.ImageData.Length);
+                        }
+                    }
+
+                    foreach (var attachment in item.Attachments)
+                    {
+                        if (File.Exists(filePath + attachment.FileNameUrl))
+                        {
+                            throw new Exception($"{attachment.FileNameUrl} file exists!");
+                        }
+
+                        using (var fs = new FileStream(filePath + attachment.FileNameUrl, FileMode.Create, FileAccess.Write))
+                        {
+                            fs.Write(attachment.FileData, 0, attachment.FileData.Length);
+                        }
+                    }
                 }
             }
 
