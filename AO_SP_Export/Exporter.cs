@@ -36,8 +36,7 @@ SELECT TOP {numOfItems}
     i.ModifiedDate, 
     u.Email AS Author, 
     images.[Data] AS ImageData, 
-    images.[FileName] AS ImageFileName, 
-    tag.[Value] AS TagValue
+    images.[FileName] AS ImageFileName
 FROM vwItems i
 	INNER JOIN [types] t on i.typeid = t.TypeID
 	INNER JOIN vwItemRelations ir ON ir.IDTo = i.ItemID
@@ -45,8 +44,6 @@ FROM vwItems i
 	INNER JOIN vwUsers u ON u.UserId = i.CreatedUserID
 	LEFT JOIN vwImages images ON i.ImageGUID = images.ImageGUID
 	LEFT JOIN vwItemTextData itd ON itd.ItemId = i.ItemID
-    LEFT JOIN vwItemTags it ON it.ItemId = i.ItemId
-    LEFT JOIN vwTags tag ON tag.TagId = it.TagId
 WHERE t.Code = 'EZINE_ITEM' AND iParent.ItemId = @ezineId
 ORDER BY CreatedDate DESC";
 
@@ -55,6 +52,7 @@ ORDER BY CreatedDate DESC";
                 foreach (var item in items)
                 {
                     var attachments = GetAttachments(connection, item.ItemId);
+                    var tagValue = GetTagValues(connection, item.ItemId);
 
                     var content = item.Description;
                     if (!string.IsNullOrEmpty(item.Data))
@@ -62,7 +60,7 @@ ORDER BY CreatedDate DESC";
                         content = content + item.Data;
                     }
 
-                    var ezineItem = new EzineItem(item.ItemId, item.Title, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, item.TagValue,
+                    var ezineItem = new EzineItem(item.ItemId, item.Title, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, tagValue,
                         item.CreatedDate, item.ModifiedDate, attachments);
 
                     output.Add(ezineItem);
@@ -70,6 +68,32 @@ ORDER BY CreatedDate DESC";
             }
 
             return output;
+        }
+
+        private static string GetTagValues(SqlConnection connection, int itemId)
+        {
+            var tagValue = string.Empty;
+
+            string sql = $@"
+SELECT tag.[Value] AS TagValue
+FROM vwItemTags it
+INNER JOIN vwTags tag ON tag.TagId = it.TagId
+WHERE it.ItemId = @itemId
+ORDER BY it.CreatedDate DESC";
+
+            var tags = connection.Query(sql, new { itemId }).ToList();
+
+            foreach (var tag in tags)
+            {
+                if (!string.IsNullOrEmpty(tagValue))
+                {
+                    tagValue += ", ";
+                }
+
+                tagValue += tag.TagValue;
+            }
+
+            return tagValue;
         }
 
         private static List<ItemAttachment> GetAttachments(SqlConnection connection, int itemId)

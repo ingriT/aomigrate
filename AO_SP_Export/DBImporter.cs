@@ -51,7 +51,7 @@ CREATE TABLE {tableName} (
     Title VARCHAR(MAX),
     Content VARCHAR(MAX),
     AuthorEmail VARCHAR(MAX),
-    ImageFileName VARCHAR(MAX),
+    [Image] VARCHAR(MAX),
     TagValue VARCHAR(MAX),
     CreatedOn DATETIME,
     ModifiedOn DATETIME
@@ -69,7 +69,7 @@ CREATE TABLE {tableName} (
                     }
 
                     sql = $@"
-INSERT INTO {tableName} (Title, Content, AuthorEmail, ImageFileName, TagValue, CreatedOn, ModifiedOn)
+INSERT INTO {tableName} (Title, Content, AuthorEmail, [Image], TagValue, CreatedOn, ModifiedOn)
 VALUES (@title, @content, @authorEmail, @imageFileName, @tagValue, @createdOn, @modifiedOn)";
 
                     connection.Execute(sql, new
