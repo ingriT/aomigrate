@@ -65,7 +65,7 @@ CREATE TABLE {tableName} (
 
                     if (!string.IsNullOrEmpty(item.ImageFileName))
                     {
-                        imageFileName = $"<img src=\"http://global.intranet.allenovery.com/locations/europe/netherlands/images/{item.ImageFileNameUrl}\" />";
+                        imageFileName = $"<img src=\"http://global.intranet.allenovery.com/locations/europe/netherlands/publishingimages/{item.ImageFileNameUrl}\" />";
                     }
 
                     sql = $@"
