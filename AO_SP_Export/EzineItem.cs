@@ -16,13 +16,29 @@ namespace AO_SP_Export
 
         internal ItemAttachment(int id, string title, byte[] fileData, string fileName, string mimeType)
         {
+            fileName = fileName.Replace("\\", string.Empty);
+            fileName = fileName.Replace("/", string.Empty);
+            fileName = fileName.Replace(":", string.Empty);
+            fileName = fileName.Replace("*", string.Empty);
+            fileName = fileName.Replace("?", string.Empty);
+            fileName = fileName.Replace("\"", string.Empty);
+            fileName = fileName.Replace("<", string.Empty);
+            fileName = fileName.Replace(">", string.Empty);
+            fileName = fileName.Replace("|", string.Empty);
+            fileName = fileName.Replace("#", string.Empty);
+            fileName = fileName.Replace("{", string.Empty);
+            fileName = fileName.Replace("}", string.Empty);
+            fileName = fileName.Replace("%", string.Empty);
+            fileName = fileName.Replace("~", string.Empty);
+            fileName = fileName.Replace("&", string.Empty);
+
             this.Id = id;
             this.Title = title;
             this.FileData = fileData;
             this.FileName = fileName;
             this.MimeType = mimeType;
 
-            this.FileNameUrl = Guid.NewGuid().ToString().Substring(0,8) + "_" + fileName;
+            this.FileNameUrl = Guid.NewGuid().ToString().Substring(0, 8) + "_" + fileName;
         }
     }
 
@@ -80,6 +96,7 @@ namespace AO_SP_Export
 
             this.Attachments = attachments;
 
+            content = RemoveOldHyperlinks(content);
             content = AddAttachments(content, attachments);
 
             this.Id = id;
@@ -114,6 +131,21 @@ namespace AO_SP_Export
             this.Url = ParentWebUrl + FileUrl;
 
             this.DirName = "Locations/Europe/Netherlands/NL Corporate/Pages";
+        }
+
+        private string RemoveOldHyperlinks(string content)
+        {
+            while (content.Contains("href=\"http://amsmartsite"))
+            {
+                var startIndex = content.IndexOf("href=\"http://amsmartsite");
+                var endIndex = content.IndexOf("\"", startIndex + "href=\"".Length);
+
+                var hyperlinkContent = content.Substring(startIndex, endIndex + 1 - startIndex);
+
+                content = content.Replace(hyperlinkContent, "title=\"Deze hyperlink is door de migratie naar SharePoint niet meer beschikbaar.\"");
+            }
+
+            return content;
         }
 
         private string AddAttachments(string content, List<ItemAttachment> attachments)
