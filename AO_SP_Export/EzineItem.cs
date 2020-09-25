@@ -31,6 +31,7 @@ namespace AO_SP_Export
             fileName = fileName.Replace("%", string.Empty);
             fileName = fileName.Replace("~", string.Empty);
             fileName = fileName.Replace("&", string.Empty);
+            fileName = fileName.Replace("–", string.Empty);
 
             this.Id = id;
             this.Title = title;
@@ -91,7 +92,16 @@ namespace AO_SP_Export
             this.AuthorEmail = authorEmail;
             this.ImageData = imageData;
             this.ImageFileName = imageFileName;
-            this.ImageFileNameUrl = Guid.NewGuid().ToString().Substring(0, 8) + ImageFileName;
+
+            if (!string.IsNullOrEmpty(imageFileName))
+            {
+                this.ImageFileNameUrl = Guid.NewGuid().ToString().Substring(0, 8) + ImageFileName;
+            }
+            else
+            {
+                this.ImageFileNameUrl = "";
+            }
+
             this.TagValue = tagValue;
 
             this.Attachments = attachments;

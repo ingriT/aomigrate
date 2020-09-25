@@ -10,10 +10,10 @@ namespace AO_SP_Export
     {
         private const string ConnectionStringNew = "Server=.;Integrated Security=true;Database=NieuwsoverzichtLite";
 
-        internal static void Run(int ezineId, int numOfItems)
+        internal static void Run(int ezineId, DateTime fromDate, int numOfItems = 0)
         {
             // Get some items from the database
-            var ezineItemsForExport = Exporter.GetItems(ezineId, numOfItems);
+            var ezineItemsForExport = Exporter.GetItems(ezineId, fromDate, numOfItems);
 
             var ezineTitle = Exporter.GetEzineTitle(ezineId);
             var tableName = ezineTitle.Replace("_", "").Replace("-", "").Replace(" ", "").Replace(",", "").Replace(".", "").ToLower();

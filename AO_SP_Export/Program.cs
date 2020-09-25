@@ -9,7 +9,8 @@ namespace AO_SP_Export
             var xmlExport = false;
 
             var ezineId = 209; // Corporate Know-How
-            const int numOfItems = 10; //Int32.MaxValue;
+            const int numOfItems = Int32.MaxValue;
+            var fromDate = DateTime.Now.AddYears(-20);
 
             if (xmlExport)
             {
@@ -21,30 +22,30 @@ namespace AO_SP_Export
                 {
                     System.IO.Directory.CreateDirectory(directory);
                 }
-
-                ExportXml.Run(ezineId, directory, numOfItems, increment);
+                
+                ExportXml.Run(ezineId, directory, fromDate, increment, numOfItems);
             }
             else
             {
-                DBImporter.Run(ezineId, numOfItems);
+                DBImporter.Run(ezineId, fromDate, numOfItems);
 
                 ezineId = 239; // Employment
-                DBImporter.Run(ezineId, numOfItems);
+                DBImporter.Run(ezineId, fromDate, numOfItems);
 
                 ezineId = 169; // Litigation
-                DBImporter.Run(ezineId, numOfItems);
+                DBImporter.Run(ezineId, fromDate, numOfItems);
 
                 ezineId = 201; // Tax alert
-                DBImporter.Run(ezineId, numOfItems);
+                DBImporter.Run(ezineId, fromDate, numOfItems);
 
 //                ezineId = 272; // Global Tax
 //                DBImporter.Run(ezineId, numOfItems);
 
                 ezineId = 205; // Bibliotheek
-                DBImporter.Run(ezineId, numOfItems);
+                DBImporter.Run(ezineId, fromDate, numOfItems);
 
                 ezineId = 164; // Ondernemingsraad
-                DBImporter.Run(ezineId, numOfItems);
+                DBImporter.Run(ezineId, fromDate, numOfItems);
 
             }
         }

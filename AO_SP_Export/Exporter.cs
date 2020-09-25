@@ -20,14 +20,15 @@ namespace AO_SP_Export
             }
         }
 
-        internal static List<EzineItem> GetItems(int ezineId, int numOfItems)
+        internal static List<EzineItem> GetItems(int ezineId, DateTime fromDate, int numOfItems = 0)
         {
             var output = new List<EzineItem>();
+            var topSql = numOfItems > 0 ? $" TOP {numOfItems} " : "";
 
             using (var connection = new SqlConnection(ConnectionStringOld))
             {
                 string sql = $@"
-SELECT TOP {numOfItems} 
+SELECT {topSql}
     i.ItemId, 
     i.Title, 
     i.[Description], 
@@ -44,10 +45,10 @@ FROM vwItems i
 	INNER JOIN vwUsers u ON u.UserId = i.CreatedUserID
 	LEFT JOIN vwImages images ON i.ImageGUID = images.ImageGUID
 	LEFT JOIN vwItemTextData itd ON itd.ItemId = i.ItemID
-WHERE t.Code = 'EZINE_ITEM' AND iParent.ItemId = @ezineId
-ORDER BY CreatedDate DESC";
+WHERE t.Code = 'EZINE_ITEM' AND iParent.ItemId = @ezineId AND i.CreatedDate >= @fromDate
+ORDER BY i.CreatedDate DESC";
 
-                var items = connection.Query(sql, new { ezineId = ezineId }).ToList();
+                var items = connection.Query(sql, new { ezineId = ezineId, fromDate = fromDate }).ToList();
 
                 foreach (var item in items)
                 {
