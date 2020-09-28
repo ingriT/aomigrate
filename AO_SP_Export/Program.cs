@@ -9,7 +9,7 @@ namespace AO_SP_Export
             var xmlExport = false;
 
             const int numOfItems = Int32.MaxValue;
-            var fromDate = DateTime.Now.AddYears(-20);
+            var fromDate = DateTime.Now.AddMonths(-20);
 
             if (xmlExport)
             {
@@ -28,15 +28,15 @@ namespace AO_SP_Export
             {
                 DBImporter.Run(Ezine.CorporateKnowHowAlert, fromDate, numOfItems);
 
-                //DBImporter.Run(Ezine.Employment, fromDate, numOfItems);
+                DBImporter.Run(Ezine.Employment, fromDate, numOfItems);
 
                 DBImporter.Run(Ezine.Litigation, fromDate, numOfItems);
 
-                //DBImporter.Run(Ezine.TaxAlert, fromDate, numOfItems);
+                DBImporter.Run(Ezine.TaxAlert, fromDate, numOfItems);
 
-                //DBImporter.Run(Ezine.Bibliotheek, fromDate, numOfItems);
+                DBImporter.Run(Ezine.Bibliotheek, fromDate, numOfItems);
 
-                //DBImporter.Run(Ezine.Ondernemingsraad, fromDate, numOfItems);
+                DBImporter.Run(Ezine.Ondernemingsraad, fromDate, numOfItems);
             }
         }
 

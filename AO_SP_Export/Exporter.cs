@@ -93,7 +93,7 @@ ORDER BY i.CreatedDate DESC";
 
                 if (tagsToReplace.Keys.Contains(tagValue))
                 {
-                    var newTag = tagsToReplace[tagValue];
+                    var newTag = tagsToReplace[tagValue].Trim();
 
                     if (!newTags.Contains(newTag, StringComparer.InvariantCulture))
                     {
@@ -102,7 +102,10 @@ ORDER BY i.CreatedDate DESC";
                     }
                 }
 
-                newTags.Add(tagValue);
+                if (!newTags.Contains(tagValue, StringComparer.InvariantCulture))
+                {
+                    newTags.Add(tagValue);
+                }
             }
 
             var output = string.Empty;
@@ -205,7 +208,7 @@ ORDER BY it.CreatedDate DESC";
 
             foreach (var tag in tags)
             {
-                tagValues.Add(tag.TagValue);
+                tagValues.Add(tag.TagValue.Trim());
             }
 
             return tagValues;
