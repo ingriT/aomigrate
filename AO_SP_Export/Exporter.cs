@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using static AO_SP_Export.Program;
 
 namespace AO_SP_Export
 {
@@ -10,17 +11,17 @@ namespace AO_SP_Export
     {
         private const string ConnectionStringOld = "Server=.;Integrated Security=true;Database=Nieuwsoverzicht";
 
-        internal static string GetEzineTitle(int ezineId)
+        internal static string GetEzineTitle(Ezine ezine)
         {
             using (var connection = new SqlConnection(ConnectionStringOld))
             {
                 string sql = $@"SELECT i.Title FROM vwItems i WHERE i.ItemId = @ezineId";
 
-                return connection.ExecuteScalar<string>(sql, new { ezineId = ezineId });
+                return connection.ExecuteScalar<string>(sql, new { ezineId = (int)ezine });
             }
         }
 
-        internal static List<EzineItem> GetItems(int ezineId, DateTime fromDate, int numOfItems = 0)
+        internal static List<EzineItem> GetItems(Ezine ezine, DateTime fromDate, int numOfItems = 0)
         {
             var output = new List<EzineItem>();
             var topSql = numOfItems > 0 ? $" TOP {numOfItems} " : "";
@@ -48,32 +49,150 @@ FROM vwItems i
 WHERE t.Code = 'EZINE_ITEM' AND iParent.ItemId = @ezineId AND i.CreatedDate >= @fromDate
 ORDER BY i.CreatedDate DESC";
 
-                var items = connection.Query(sql, new { ezineId = ezineId, fromDate = fromDate }).ToList();
+                var items = connection.Query(sql, new { ezineId = (int)ezine, fromDate = fromDate }).ToList();
 
                 foreach (var item in items)
                 {
-                    var attachments = GetAttachments(connection, item.ItemId);
-                    var tagValue = GetTagValues(connection, item.ItemId);
+                    List<string> tagValues = GetTagValues(connection, item.ItemId);
 
-                    var content = item.Description;
-                    if (!string.IsNullOrEmpty(item.Data))
+                    var newTags = ReplaceTagsAndCheckIfImport(ezine, tagValues);
+
+                    if (!string.IsNullOrEmpty(newTags))
                     {
-                        content = content + item.Data;
+                        var attachments = GetAttachments(connection, item.ItemId);
+                        var content = item.Description;
+                        if (!string.IsNullOrEmpty(item.Data))
+                        {
+                            content = content + item.Data;
+                        }
+
+                        var ezineItem = new EzineItem(item.ItemId, item.Title, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, newTags,
+                            item.CreatedDate, item.ModifiedDate, attachments);
+
+                        output.Add(ezineItem);
                     }
-
-                    var ezineItem = new EzineItem(item.ItemId, item.Title, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, tagValue,
-                        item.CreatedDate, item.ModifiedDate, attachments);
-
-                    output.Add(ezineItem);
                 }
             }
 
             return output;
         }
 
-        private static string GetTagValues(SqlConnection connection, int itemId)
+        private static string ReplaceTagsAndCheckIfImport(Ezine ezine, List<string> tagValues)
         {
-            var tagValue = string.Empty;
+            var newTags = new List<string>();
+
+            var tagsToRemove = GetTagsToRemove(ezine);
+            var tagsToReplace = GetTagsToReplace(ezine);
+
+            foreach (var tagValue in tagValues)
+            {
+                if (tagsToRemove.Contains(tagValue, StringComparer.InvariantCultureIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (tagsToReplace.Keys.Contains(tagValue))
+                {
+                    var newTag = tagsToReplace[tagValue];
+
+                    if (!newTags.Contains(newTag, StringComparer.InvariantCulture))
+                    {
+                        newTags.Add(newTag);
+                        continue;
+                    }
+                }
+
+                newTags.Add(tagValue);
+            }
+
+            var output = string.Empty;
+
+            foreach (var tag in newTags)
+            {
+                if (!string.IsNullOrEmpty(output))
+                {
+                    output += ", ";
+                }
+
+                output += tag;
+            }
+
+            return output;
+        }
+
+        private static Dictionary<string, string> GetTagsToReplace(Ezine ezine)
+        {
+            var tagsToReplace = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+
+            if (ezine == Ezine.Litigation)
+            {
+                tagsToReplace.Add("Aanwinsten", "Aanwinsten literatuur");
+                tagsToReplace.Add("Class actions", "Class actions");
+                tagsToReplace.Add("E-alerts Litigation", "E-alerts Litigation");
+                tagsToReplace.Add("Engelse taal", "Engelse taal");
+                tagsToReplace.Add("Griffierecht", "Griffierechten en kosten");
+                tagsToReplace.Add("Jurisprudentiebundels", "Jurisprudentiebundels");
+                tagsToReplace.Add("Know how", "Know how");
+                tagsToReplace.Add("Know how berichten", "Know how");
+                tagsToReplace.Add("Nieuws algemeen", "PG-nieuws");
+                tagsToReplace.Add("Presentaties Arbitration Group Amsterdam (AGA) ", "Presentaties AGA");
+                tagsToReplace.Add("Presentaties extern", "Presentatie extern");
+                tagsToReplace.Add("Presentaties Know How Bijeenkomsten", "Presentaties intern");
+                tagsToReplace.Add("Presentaties Litigation Academy", "Presentaties intern");
+                tagsToReplace.Add("Publicaties Litigation", "Publicaties Litigation");
+                tagsToReplace.Add("Seminar Uitspraak Gemist", "Seminar Uitspraak Gemist");
+                tagsToReplace.Add("Signalering", "Signaleringen Ontwikkelingen");
+                tagsToReplace.Add("Wet- en regelgeving update", "Wet- en regelgeving update");
+                tagsToReplace.Add("Wetsvoorstellen", "Wet- en regelgeving update");
+                tagsToReplace.Add("Update Wet- en regelgeving update", "Wet- en regelgeving update");
+            }
+            else if (ezine == Ezine.CorporateKnowHowAlert)
+            {
+                tagsToReplace.Add("Eumedion", "Corporate Governance");
+                tagsToReplace.Add("FD", "Corporate Signalering");
+                tagsToReplace.Add("Nieuwsberichten", "Corporate Signalering");
+                tagsToReplace.Add("e-Alert", "e-Alert / eReview");
+                tagsToReplace.Add("e-Review", "e-Alert / eReview");
+                tagsToReplace.Add("Financiele instellingen", "Financial Regulatory");
+                tagsToReplace.Add("Financiele markten", "Financial Regulatory");
+                tagsToReplace.Add("Wft wetgeving", "Financial Regulatory");
+                tagsToReplace.Add("Hoge raad", "Jurisprudentie");
+                tagsToReplace.Add("Actuele uitspraken", "Jurisprudentie");
+                tagsToReplace.Add("Know How Nieuws", "Know How Nieuws");
+                tagsToReplace.Add("SFP's", "SFP's");
+                tagsToReplace.Add("AFM", "Wet- en Regelgeving Update");
+                tagsToReplace.Add("AFM berichten", "Wet- en Regelgeving Update");
+                tagsToReplace.Add("AIFM Richtlijn", "Wet- en Regelgeving Update");
+                tagsToReplace.Add("Beloning", "Wet- en Regelgeving Update");
+                tagsToReplace.Add("Europees nieuws", "Wet- en Regelgeving Update");
+                tagsToReplace.Add("ESMA", "Wet- en Regelgeving Update");
+                tagsToReplace.Add("Legislation", "Wet- en Regelgeving Update");
+                tagsToReplace.Add("Wetsvoorstellen", "Wet- en Regelgeving Update");
+            }
+
+            return tagsToReplace;
+        }
+
+        private static List<string> GetTagsToRemove(Ezine ezine)
+        {
+            var tagsToRemove = new List<string>();
+
+            if (ezine == Ezine.Litigation)
+            {
+                tagsToRemove.AddRange(new List<string> { "A&O News", "Financial publications", "Mededeling", "Nieuw in KH systeem en Lit. Online",
+                    "Nieuw op de Know-How site", "Nieuwe producten", "Nieuws algemeen", "Nieuwsberichten" });
+            }
+            else if (ezine == Ezine.CorporateKnowHowAlert)
+            {
+                tagsToRemove.AddRange(new List<string> { "CESR" });
+            }
+
+            return tagsToRemove;
+        }
+
+        private static List<string> GetTagValues(SqlConnection connection, int itemId)
+        {
+            List<string> tagValues = new List<string>();
 
             string sql = $@"
 SELECT tag.[Value] AS TagValue
@@ -86,15 +205,10 @@ ORDER BY it.CreatedDate DESC";
 
             foreach (var tag in tags)
             {
-                if (!string.IsNullOrEmpty(tagValue))
-                {
-                    tagValue += ", ";
-                }
-
-                tagValue += tag.TagValue;
+                tagValues.Add(tag.TagValue);
             }
 
-            return tagValue;
+            return tagValues;
         }
 
         private static List<ItemAttachment> GetAttachments(SqlConnection connection, int itemId)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using static AO_SP_Export.Program;
 
 namespace AO_SP_Export
 {
@@ -10,12 +11,12 @@ namespace AO_SP_Export
     {
         private const string ConnectionStringNew = "Server=.;Integrated Security=true;Database=NieuwsoverzichtLite";
 
-        internal static void Run(int ezineId, DateTime fromDate, int numOfItems = 0)
+        internal static void Run(Ezine ezine, DateTime fromDate, int numOfItems = 0)
         {
             // Get some items from the database
-            var ezineItemsForExport = Exporter.GetItems(ezineId, fromDate, numOfItems);
+            var ezineItemsForExport = Exporter.GetItems(ezine, fromDate, numOfItems);
 
-            var ezineTitle = Exporter.GetEzineTitle(ezineId);
+            var ezineTitle = Exporter.GetEzineTitle(ezine);
             var tableName = ezineTitle.Replace("_", "").Replace("-", "").Replace(" ", "").Replace(",", "").Replace(".", "").ToLower();
 
             SaveItems(tableName, ezineItemsForExport);

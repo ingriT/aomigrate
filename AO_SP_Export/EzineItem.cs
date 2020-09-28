@@ -110,7 +110,7 @@ namespace AO_SP_Export
             content = AddAttachments(content, attachments);
 
             this.Id = id;
-            this.Title = title;
+            this.Title = title + " - " + tagValue;
             this.Content = content;
             this.ContentInnerText = StripHtml(content);
             this.CreatedOn = createdOn;

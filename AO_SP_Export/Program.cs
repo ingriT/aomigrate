@@ -8,7 +8,6 @@ namespace AO_SP_Export
         {
             var xmlExport = false;
 
-            var ezineId = 209; // Corporate Know-How
             const int numOfItems = Int32.MaxValue;
             var fromDate = DateTime.Now.AddYears(-20);
 
@@ -23,31 +22,32 @@ namespace AO_SP_Export
                     System.IO.Directory.CreateDirectory(directory);
                 }
                 
-                ExportXml.Run(ezineId, directory, fromDate, increment, numOfItems);
+                ExportXml.Run(Ezine.CorporateKnowHowAlert, directory, fromDate, increment, numOfItems);
             }
             else
             {
-                DBImporter.Run(ezineId, fromDate, numOfItems);
+                DBImporter.Run(Ezine.CorporateKnowHowAlert, fromDate, numOfItems);
 
-                ezineId = 239; // Employment
-                DBImporter.Run(ezineId, fromDate, numOfItems);
+                //DBImporter.Run(Ezine.Employment, fromDate, numOfItems);
 
-                ezineId = 169; // Litigation
-                DBImporter.Run(ezineId, fromDate, numOfItems);
+                DBImporter.Run(Ezine.Litigation, fromDate, numOfItems);
 
-                ezineId = 201; // Tax alert
-                DBImporter.Run(ezineId, fromDate, numOfItems);
+                //DBImporter.Run(Ezine.TaxAlert, fromDate, numOfItems);
 
-//                ezineId = 272; // Global Tax
-//                DBImporter.Run(ezineId, numOfItems);
+                //DBImporter.Run(Ezine.Bibliotheek, fromDate, numOfItems);
 
-                ezineId = 205; // Bibliotheek
-                DBImporter.Run(ezineId, fromDate, numOfItems);
-
-                ezineId = 164; // Ondernemingsraad
-                DBImporter.Run(ezineId, fromDate, numOfItems);
-
+                //DBImporter.Run(Ezine.Ondernemingsraad, fromDate, numOfItems);
             }
+        }
+
+        public enum Ezine
+        {
+            CorporateKnowHowAlert = 209,
+            Employment = 239,
+            Litigation = 169,
+            TaxAlert = 201,
+            Bibliotheek = 205,
+            Ondernemingsraad = 164
         }
     }
 }
