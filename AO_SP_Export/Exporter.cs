@@ -172,6 +172,112 @@ ORDER BY i.CreatedDate DESC";
                 tagsToReplace.Add("Legislation", "Wet- en Regelgeving Update");
                 tagsToReplace.Add("Wetsvoorstellen", "Wet- en Regelgeving Update");
             }
+            else if (ezine == Ezine.TaxAlert)
+            {
+                tagsToReplace.Add("Agenda literatuuroverleg", "Agenda literatuuroverleg");
+                tagsToReplace.Add("Arrestenoverzicht", "Arresten hoge raad");
+                tagsToReplace.Add("Belastingdienst en aangiften", "Belastingdienst en aangiften");
+                tagsToReplace.Add("Beconberichten", "Belastingdienst en aangiften");
+                tagsToReplace.Add("Kantoor", "Belastingdienst en aangiften");
+                tagsToReplace.Add("GT Denmark", "Belastingdienst en aangiften");
+                tagsToReplace.Add("GT EU Deveopments", "Belastingdienst en aangiften");
+                tagsToReplace.Add("GT Germany", "Belastingdienst en aangiften");
+                tagsToReplace.Add("Conferenties / symposia  / seminars", "Conferenties symposia en seminars");
+                tagsToReplace.Add("Opleidingen", "Conferenties symposia en seminars");
+                tagsToReplace.Add("Presentaties", "Conferenties symposia en seminars");
+                tagsToReplace.Add("Seminars", "Conferenties symposia en seminars");
+                tagsToReplace.Add("E-Alerts", "eAlerts");
+                tagsToReplace.Add("Fiscaal overleg andere kantoren", "Fiscaal overleg andere kantoren");
+                tagsToReplace.Add("Global layer friends", "Global layer friends");
+                tagsToReplace.Add("IBFD", "IBFD _ Nieuwe artikelen");
+                tagsToReplace.Add("Know How berichten", "Know how berichten");
+                tagsToReplace.Add("Know how nieuws", "Know how berichten");
+                tagsToReplace.Add("Know how overleg", "Know how berichten");
+                tagsToReplace.Add("Kantoor algemeen", "Know how berichten");
+                tagsToReplace.Add("Tips & tricks", "Know how berichten");
+                tagsToReplace.Add("Loyens & Loeff Tax alerts", "Know how berichten");
+                tagsToReplace.Add("Hoge Raad", "Know how berichten");
+                tagsToReplace.Add("Landen Nieuws", "Landen Nieuws");
+                tagsToReplace.Add("Newsletters", "Landen Nieuws");
+                tagsToReplace.Add("Landen: Australia", "Landen Australia");
+                tagsToReplace.Add("Landen: Belgie", "Landen Belgie");
+                tagsToReplace.Add("Landen: Benelux", "Landen Benelux");
+                tagsToReplace.Add("Landen: Caraiben", "Landen Caraiben");
+                tagsToReplace.Add("Landen: China", "Landen China");
+                tagsToReplace.Add("Landen: Curacao", "Landen Curacao");
+                tagsToReplace.Add("Landen: Denemarken", "Landen Denemarken");
+                tagsToReplace.Add("Landen: Duitsland", "Landen Duitsland");
+                tagsToReplace.Add("Landen: EU", "Landen EU");
+                tagsToReplace.Add("Europees nieuws", "Landen EU");
+                tagsToReplace.Add("Hvj EU", "Landen EU");
+                tagsToReplace.Add("State Aid", "Landen EU");
+                tagsToReplace.Add("Landen: Frankrijk", "Landen Frankrijk");
+                tagsToReplace.Add("Landen: Griekenland", "Landen Griekenland");
+                tagsToReplace.Add("Landen: Ierland", "Landen Ierland");
+                tagsToReplace.Add("Landen: Luxemburg", "Landen Luxemburg");
+                tagsToReplace.Add("Landen: Oostenrijk", "Landen Oostenrijk");
+                tagsToReplace.Add("Landen: Portugal", "Landen Portugal");
+                tagsToReplace.Add("Landen: Spanje", "Landen Spanje");
+                tagsToReplace.Add("Landen: UK", "Landen UK");
+                tagsToReplace.Add("Landen: US", "Landen US");
+                tagsToReplace.Add("Landen: Zwitserland", "Landen Zwitserland");
+                tagsToReplace.Add("Nieuw boeken", "Nieuwe boeken");
+                tagsToReplace.Add("Nieuwetijdschriften", "Nieuwetijdschriften");
+                tagsToReplace.Add("Vakbladen", "Nieuwetijdschriften");
+                tagsToReplace.Add("Vakliteratuur", "Nieuwetijdschriften");
+                tagsToReplace.Add("NOB", "NOB");
+                tagsToReplace.Add("SFP's", "SFPs");
+                tagsToReplace.Add("Vaktechniek", "Vaktechniek");
+                tagsToReplace.Add("VT: Aansprakelijkheid", "VT Aansprakelijkheid");
+                tagsToReplace.Add("VT: Arbeidsrecht", "VT Arbeidsrecht");
+                tagsToReplace.Add("VT: Bankenbelasting", "VT Bankenbelasting");
+                tagsToReplace.Add("VT: Belastingplan", "VT Belastingplan");
+                tagsToReplace.Add("VT: Beneficial ownership", "VT Beneficial ownership");
+                tagsToReplace.Add("VT: BEPS", "VT BEPS");
+                tagsToReplace.Add("VT: Brexit", "VT Brexit");
+                tagsToReplace.Add("VT: BTW", "VT BTW");
+                tagsToReplace.Add("VT: BvR overdrachtbelasting", "VT BvR overdrachtbelasting");
+                tagsToReplace.Add("VT: Diversen", "VT Diversen");
+                tagsToReplace.Add("VT: Dividendbelasting", "VT Dividendbelasting");
+                tagsToReplace.Add("VT: Estate planning", "VT Estate planning");
+                tagsToReplace.Add("VT: EU", "VT EU");
+                tagsToReplace.Add("VT: FACTA", "VT FACTA");
+                tagsToReplace.Add("VT: Formeel", "VT Formeel");
+                tagsToReplace.Add("VT: Fraus legis", "VT Fraus legis");
+                tagsToReplace.Add("VT: FTT", "VT FTT");
+                tagsToReplace.Add("VT: Fusies en overnames", "VT Fusies en overnames");
+                tagsToReplace.Add("VT: Inkomstenbelasting", "VT Inkomstenbelasting");
+                tagsToReplace.Add("VT: Internationaal", "VT Internationaal");
+                tagsToReplace.Add("VT: LB Excessieve beloningen", "VT LB Excessieve beloningen");
+                tagsToReplace.Add("VT: Loonbelasting", "VT Loonbelasting");
+                tagsToReplace.Add("VT: M&A", "VT M&A");
+                tagsToReplace.Add("VT: Mandatory disclosure", "VT Mandatory disclosure");
+                tagsToReplace.Add("VT: MLI", "VT MLI");
+                tagsToReplace.Add("VT: OESO", "VT OESO");
+                tagsToReplace.Add("VT: Ondernemingsrecht", "VT Ondernemingsrecht");
+                tagsToReplace.Add("VT: Opinies", "VT Opinies");
+                tagsToReplace.Add("VT: Real estate", "VT Real estate");
+                tagsToReplace.Add("VT: Rulings", "VT Rulings");
+                tagsToReplace.Add("VT: Sociale zekerheid", "VT Sociale zekerheid");
+                tagsToReplace.Add("VT:taxtreaties", "VTtaxtreaties");
+                tagsToReplace.Add("VT:tier 1", "VTtier 1");
+                tagsToReplace.Add("VT:transfer pricing", "VTtransfer pricing");
+                tagsToReplace.Add("VT: Verschoningsrecht", "VT Verschoningsrecht");
+                tagsToReplace.Add("VT: VPB", "VT VPB");
+                tagsToReplace.Add("VT: VPB (niet)transparantie", "VT VPB (niet)transparantie");
+                tagsToReplace.Add("VT: VPB 30% regeling", "VT VPB 30% regeling");
+                tagsToReplace.Add("VT: VPB Beleggingsinstellinge", "VT VPB Beleggingsinstellinge");
+                tagsToReplace.Add("VT: VPB Deelneminsgvrijstellig", "VT VPB Deelneminsgvrijstellig");
+                tagsToReplace.Add("VT: VPB FGR", "VT VPB FGR");
+                tagsToReplace.Add("VT: VPB Fiscale eenheid", "VT VPB Fiscale eenheid");
+                tagsToReplace.Add("VT: VPB RE investmenttrust (REITs)", "VT VPB RE investmenttrust REITs");
+                tagsToReplace.Add("VT: VPB Rente aftrek", "VT VPB Rente aftrek");
+                tagsToReplace.Add("VT: Wetsvoorstellen", "VT Wetsvoorstellen");
+                tagsToReplace.Add("VTO", "VTO");
+                tagsToReplace.Add("Wetsvoorstellen", "Wetsvoorstellen");
+                tagsToReplace.Add("Wetten.nl", "Wetten_nl");
+                tagsToReplace.Add("Wft wetgeving", "WWFT");
+            }
 
             return tagsToReplace;
         }
@@ -188,6 +294,12 @@ ORDER BY i.CreatedDate DESC";
             else if (ezine == Ezine.CorporateKnowHowAlert)
             {
                 tagsToRemove.AddRange(new List<string> { "CESR" });
+            }
+            else if (ezine == Ezine.TaxAlert)
+            {
+                tagsToRemove.AddRange(new List<string> { "Alle categorieen", "Belastingzaken", "Bericht", "Bibliotheek", "Brochures A&O", "English pointer",
+                    "GT Journals", "Literatuur", "Newsletter fiscoloog", "Newsletter Int. Fiscale Actualiteit", "Nieuwe boeken", "Protocol AAFD", "Rechtsorde",
+                    "Scripties", "Tijdschriften"});
             }
 
             return tagsToRemove;

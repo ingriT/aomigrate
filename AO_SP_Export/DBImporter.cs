@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -106,9 +108,32 @@ VALUES (@title, @content, @authorEmail, @imageFileName, @tagValue, @createdOn, @
                             throw new Exception($"{item.ImageFileNameUrl} file exists!");
                         }
 
-                        using (var fs = new FileStream(imagePath + item.ImageFileNameUrl, FileMode.Create, FileAccess.Write))
+                        using (var image = Image.Load(item.ImageData))
                         {
-                            fs.Write(item.ImageData, 0, item.ImageData.Length);
+                            var orgWidth = image.Width;
+                            var orgHeight = image.Height;
+
+                            var newWidth = 124;
+
+                            if (orgWidth != newWidth)
+                            {
+                                var newHeight = (orgWidth / newWidth) * orgHeight;
+
+                                if (orgWidth > newWidth) {
+                                    newHeight = (newWidth / orgWidth) * orgHeight;
+                                }
+
+                                image.Mutate(x => x.Resize(newWidth, newHeight));
+
+                                image.Save(imagePath + item.ImageFileNameUrl);
+                            }
+                            else
+                            {
+                                using (var fs = new FileStream(imagePath + item.ImageFileNameUrl, FileMode.Create, FileAccess.Write))
+                                {
+                                    fs.Write(item.ImageData, 0, item.ImageData.Length);
+                                }
+                            }
                         }
                     }
 
