@@ -32,6 +32,16 @@ namespace AO_SP_Export
             fileName = fileName.Replace("~", string.Empty);
             fileName = fileName.Replace("&", string.Empty);
             fileName = fileName.Replace("–", string.Empty);
+            fileName = fileName.Replace("...", string.Empty);
+            fileName = fileName.Replace("…", string.Empty);
+
+            if (fileName.Length > 110)
+            {
+                var extension = fileName.Substring(fileName.LastIndexOf("."));
+                var fileWithoutExtension = fileName.Replace(extension, string.Empty);
+
+                fileName = fileName.Substring(0, 110 - (extension.Length)) + extension;
+            }
 
             this.Id = id;
             this.Title = title;
