@@ -6,48 +6,45 @@ namespace AO_SP_Export
     {
         static void Main(string[] args)
         {
-            var xmlExport = false;
+            var fromStart = DateTime.Now.AddYears(-20);
+            var lastYear = DateTime.Now.AddMonths(-14);
 
-            const int numOfItems = Int32.MaxValue;
-            var fromDate = DateTime.Now.AddMonths(-20);
-
-            if (xmlExport)
-            {
-                const int increment = 8;
-
-                var directory = $@"C:\Users\ingri\OneDrive - iLLUMiON\A&O MIGRATIE\{increment} {DateTime.Now.ToString("yyyyMMdd_HHmmss")}\\";
-
-                if (!System.IO.Directory.Exists(directory))
-                {
-                    System.IO.Directory.CreateDirectory(directory);
-                }
-                
-                ExportXml.Run(Ezine.CorporateKnowHowAlert, directory, fromDate, increment, numOfItems);
-            }
-            else
-            {
-                DBImporter.Run(Ezine.CorporateKnowHowAlert, fromDate, numOfItems);
-
-                DBImporter.Run(Ezine.Employment, fromDate, numOfItems);
-
-                DBImporter.Run(Ezine.Litigation, fromDate, numOfItems);
-
-                DBImporter.Run(Ezine.TaxAlert, fromDate, numOfItems);
-
-                DBImporter.Run(Ezine.Bibliotheek, fromDate, numOfItems);
-
-                DBImporter.Run(Ezine.Ondernemingsraad, fromDate, numOfItems);
-            }
+            DBImporter.Run(Ezine.AllenOveryVakpublicaties, "R_L", fromStart);
+            DBImporter.Run(Ezine.AmsterdamOfficeNews, "BD_M", lastYear);
+            DBImporter.Run(Ezine.AmsterdamWallArt, "Amsterdam_Wall_Art", lastYear);
+            DBImporter.Run(Ezine.AmsterdamseNieuwsoverzicht, "BD_M", lastYear);
+            DBImporter.Run(Ezine.ApollohouseVandaag, "BD_M", lastYear);
+            DBImporter.Run(Ezine.Bibliotheek, "R_L", fromStart);
+            DBImporter.Run(Ezine.CorporateKnowHowAlert, "NL_Corporate", fromStart);
+            DBImporter.Run(Ezine.EmploymentOnline, "NL_Employment", fromStart);
+            DBImporter.Run(Ezine.HRBerichten, "HR", fromStart);
+            DBImporter.Run(Ezine.LearningAndDevelopmentOnline, "HR_L_D", fromStart);
+            DBImporter.Run(Ezine.LitigationOnline, "NL_Litigation", fromStart);
+            DBImporter.Run(Ezine.MediaAndExposure, "BD_M", lastYear);
+            DBImporter.Run(Ezine.MTMededelingen, "MT", fromStart);
+            DBImporter.Run(Ezine.Ondernemingsraad, "Ondernemingsraad", fromStart);
+            DBImporter.Run(Ezine.SponsoringEnCSR, "BD_M", lastYear);
+            DBImporter.Run(Ezine.TaxAlert, "NL_Tax", fromStart);
         }
 
         public enum Ezine
         {
-            CorporateKnowHowAlert = 209,
-            Employment = 239,
-            Litigation = 169,
-            TaxAlert = 201,
+            AllenOveryVakpublicaties = 296,
+            AmsterdamOfficeNews = 206,
+            AmsterdamWallArt = 48794,
+            AmsterdamseNieuwsoverzicht = 289,
+            ApollohouseVandaag = 208,
             Bibliotheek = 205,
-            Ondernemingsraad = 164
+            CorporateKnowHowAlert = 209,
+            EmploymentOnline = 239,
+            LitigationOnline = 169,
+            HRBerichten = 198,
+            LearningAndDevelopmentOnline = 259,
+            MediaAndExposure = 268,
+            MTMededelingen = 207,
+            Ondernemingsraad = 164,
+            SponsoringEnCSR = 237
+            TaxAlert = 201,
         }
     }
 }

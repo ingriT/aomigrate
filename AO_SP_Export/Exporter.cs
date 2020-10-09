@@ -21,15 +21,14 @@ namespace AO_SP_Export
             }
         }
 
-        internal static List<EzineItem> GetItems(Ezine ezine, DateTime fromDate, int numOfItems = 0)
+        internal static List<EzineItem> GetItems(Ezine ezine, DateTime fromDate)
         {
             var output = new List<EzineItem>();
-            var topSql = numOfItems > 0 ? $" TOP {numOfItems} " : "";
 
             using (var connection = new SqlConnection(ConnectionStringOld))
             {
                 string sql = $@"
-SELECT {topSql}
+SELECT
     i.ItemId, 
     i.Title, 
     i.[Description], 
@@ -81,30 +80,37 @@ ORDER BY i.CreatedDate DESC";
         {
             var newTags = new List<string>();
 
-            var tagsToRemove = GetTagsToRemove(ezine);
-            var tagsToReplace = GetTagsToReplace(ezine);
-
-            foreach (var tagValue in tagValues)
+            if (ezine == Ezine.Bibliotheek)
             {
-                if (tagsToRemove.Contains(tagValue, StringComparer.InvariantCultureIgnoreCase))
-                {
-                    continue;
-                }
+                newTags.Add("BibliotheekArchief");
+            }
+            else
+            {
+                var tagsToRemove = GetTagsToRemove(ezine);
+                var tagsToReplace = GetTagsToReplace(ezine);
 
-                if (tagsToReplace.Keys.Contains(tagValue))
+                foreach (var tagValue in tagValues)
                 {
-                    var newTag = tagsToReplace[tagValue].Trim();
-
-                    if (!newTags.Contains(newTag, StringComparer.InvariantCulture))
+                    if (tagsToRemove.Contains(tagValue, StringComparer.InvariantCultureIgnoreCase))
                     {
-                        newTags.Add(newTag);
                         continue;
                     }
-                }
 
-                if (!newTags.Contains(tagValue, StringComparer.InvariantCulture))
-                {
-                    newTags.Add(tagValue);
+                    if (tagsToReplace.Keys.Contains(tagValue))
+                    {
+                        var newTag = tagsToReplace[tagValue].Trim();
+
+                        if (!newTags.Contains(newTag, StringComparer.InvariantCulture))
+                        {
+                            newTags.Add(newTag);
+                            continue;
+                        }
+                    }
+
+                    if (!newTags.Contains(tagValue, StringComparer.InvariantCulture))
+                    {
+                        newTags.Add(tagValue);
+                    }
                 }
             }
 
@@ -127,7 +133,7 @@ ORDER BY i.CreatedDate DESC";
         {
             var tagsToReplace = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
-            if (ezine == Ezine.Litigation)
+            if (ezine == Ezine.LitigationOnline)
             {
                 tagsToReplace.Add("Aanwinsten", "Aanwinsten literatuur");
                 tagsToReplace.Add("Class actions", "Class actions");
@@ -286,7 +292,7 @@ ORDER BY i.CreatedDate DESC";
         {
             var tagsToRemove = new List<string>();
 
-            if (ezine == Ezine.Litigation)
+            if (ezine == Ezine.LitigationOnline)
             {
                 tagsToRemove.AddRange(new List<string> { "A&O News", "Financial publications", "Mededeling", "Nieuw in KH systeem en Lit. Online",
                     "Nieuw op de Know-How site", "Nieuwe producten", "Nieuws algemeen", "Nieuwsberichten" });

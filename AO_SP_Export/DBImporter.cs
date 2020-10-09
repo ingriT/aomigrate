@@ -13,13 +13,12 @@ namespace AO_SP_Export
     {
         private const string ConnectionStringNew = "Server=.;Integrated Security=true;Database=NieuwsoverzichtLite";
 
-        internal static void Run(Ezine ezine, DateTime fromDate, int numOfItems = 0)
+        internal static void Run(Ezine ezine, string tableName, DateTime fromDate)
         {
             // Get some items from the database
-            var ezineItemsForExport = Exporter.GetItems(ezine, fromDate, numOfItems);
+            var ezineItemsForExport = Exporter.GetItems(ezine, fromDate);
 
             var ezineTitle = Exporter.GetEzineTitle(ezine);
-            var tableName = ezineTitle.Replace("_", "").Replace("-", "").Replace(" ", "").Replace(",", "").Replace(".", "").ToLower();
 
             SaveItems(tableName, ezineItemsForExport);
         }
@@ -30,24 +29,12 @@ namespace AO_SP_Export
 
             using (var connection = new SqlConnection(ConnectionStringNew))
             {
-                var sql = $@"DROP TABLE {tableName})";
-                try
-                {
-                    connection.Execute(sql);
-                }
-                catch (Exception ex)
-                {
-                    // do nothing
-                }
-
-                sql = $@"
-IF (EXISTS (SELECT * 
+                var sql = $@"
+IF (NOT EXISTS (SELECT * 
                  FROM INFORMATION_SCHEMA.TABLES 
                  WHERE TABLE_SCHEMA = 'dbo' 
                  AND  TABLE_NAME = '{tableName}'))
 BEGIN
-    DROP TABLE {tableName}
-END
 
 CREATE TABLE {tableName} (
     Id INT IDENTITY (1,1),
@@ -58,7 +45,10 @@ CREATE TABLE {tableName} (
     TagValue VARCHAR(MAX),
     CreatedOn DATETIME,
     ModifiedOn DATETIME
-)";
+)
+
+END
+";
 
                 connection.Execute(sql);
 
