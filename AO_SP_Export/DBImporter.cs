@@ -13,13 +13,19 @@ namespace AO_SP_Export
     {
         private const string ConnectionStringNew = "Server=.;Integrated Security=true;Database=NieuwsoverzichtLite";
 
-        internal static void Run(Ezine ezine, string tableName, DateTime fromDate)
+        internal static void Run(Ezine ezine, string tableName, DateTime fromDate, bool addEzineTitleToItemTitle = false)
         {
-            // Get some items from the database
-            var ezineItemsForExport = Exporter.GetItems(ezine, fromDate);
-
+            var titleSupplement = string.Empty;
             var ezineTitle = Exporter.GetEzineTitle(ezine);
 
+            if (addEzineTitleToItemTitle)
+            {
+                titleSupplement = $" - {ezineTitle}";
+            }
+
+            // Get some items from the database
+            var ezineItemsForExport = Exporter.GetItems(ezine, fromDate, titleSupplement);
+            
             SaveItems(tableName, ezineItemsForExport);
         }
 

@@ -21,7 +21,7 @@ namespace AO_SP_Export
             }
         }
 
-        internal static List<EzineItem> GetItems(Ezine ezine, DateTime fromDate)
+        internal static List<EzineItem> GetItems(Ezine ezine, DateTime fromDate, string titleSupplement)
         {
             var output = new List<EzineItem>();
 
@@ -65,7 +65,7 @@ ORDER BY i.CreatedDate DESC";
                             content = content + item.Data;
                         }
 
-                        var ezineItem = new EzineItem(item.ItemId, item.Title, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, newTags,
+                        var ezineItem = new EzineItem(item.ItemId, item.Title + titleSupplement, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, newTags,
                             item.CreatedDate, item.ModifiedDate, attachments);
 
                         output.Add(ezineItem);
