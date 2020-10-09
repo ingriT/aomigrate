@@ -43,7 +43,7 @@ namespace AO_SP_Export
             MediaAndExposure = 268,
             MTMededelingen = 207,
             Ondernemingsraad = 164,
-            SponsoringEnCSR = 237
+            SponsoringEnCSR = 237,
             TaxAlert = 201,
         }
     }
