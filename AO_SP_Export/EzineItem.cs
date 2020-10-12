@@ -101,6 +101,37 @@ namespace AO_SP_Export
             this.Data = data;
             this.AuthorEmail = authorEmail;
             this.ImageData = imageData;
+
+            if (!string.IsNullOrEmpty(imageFileName))
+            {
+                imageFileName = imageFileName.Replace("\\", string.Empty);
+                imageFileName = imageFileName.Replace("/", string.Empty);
+                imageFileName = imageFileName.Replace(":", string.Empty);
+                imageFileName = imageFileName.Replace("*", string.Empty);
+                imageFileName = imageFileName.Replace("?", string.Empty);
+                imageFileName = imageFileName.Replace("\"", string.Empty);
+                imageFileName = imageFileName.Replace("<", string.Empty);
+                imageFileName = imageFileName.Replace(">", string.Empty);
+                imageFileName = imageFileName.Replace("|", string.Empty);
+                imageFileName = imageFileName.Replace("#", string.Empty);
+                imageFileName = imageFileName.Replace("{", string.Empty);
+                imageFileName = imageFileName.Replace("}", string.Empty);
+                imageFileName = imageFileName.Replace("%", string.Empty);
+                imageFileName = imageFileName.Replace("~", string.Empty);
+                imageFileName = imageFileName.Replace("&", string.Empty);
+                imageFileName = imageFileName.Replace("–", string.Empty);
+                imageFileName = imageFileName.Replace("...", string.Empty);
+                imageFileName = imageFileName.Replace("…", string.Empty);
+
+                if (imageFileName.Length > 110)
+                {
+                    var extension = imageFileName.Substring(imageFileName.LastIndexOf("."));
+                    var fileWithoutExtension = imageFileName.Replace(extension, string.Empty);
+
+                    imageFileName = imageFileName.Substring(0, 110 - (extension.Length)) + extension;
+                }
+            }
+            
             this.ImageFileName = imageFileName;
 
             if (!string.IsNullOrEmpty(imageFileName))
