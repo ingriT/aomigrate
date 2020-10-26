@@ -21,9 +21,10 @@ namespace AO_SP_Export
             }
         }
 
-        internal static List<EzineItem> GetItems(Ezine ezine, DateTime fromDate, string titleSupplement)
+        internal static List<EzineItem> GetItems(Ezine ezine, DateTime fromDate, string titleSupplement, out List<EzineItem> itemsRemoved)
         {
             var output = new List<EzineItem>();
+            itemsRemoved = new List<EzineItem>();
 
             using (var connection = new SqlConnection(ConnectionStringOld))
             {
@@ -69,6 +70,19 @@ ORDER BY i.CreatedDate DESC";
                             item.CreatedDate, item.ModifiedDate, attachments);
 
                         output.Add(ezineItem);
+                    }
+                    else
+                    {
+                        var content = item.Description;
+                        if (!string.IsNullOrEmpty(item.Data))
+                        {
+                            content = content + item.Data;
+                        }
+
+                        var ezineItem = new EzineItem(item.ItemId, item.Title + titleSupplement, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, newTags,
+                            item.CreatedDate, item.ModifiedDate, new List<ItemAttachment>());
+
+                        itemsRemoved.Add(ezineItem);
                     }
                 }
             }

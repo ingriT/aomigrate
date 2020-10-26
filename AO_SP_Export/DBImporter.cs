@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Text;
 using static AO_SP_Export.Program;
 
 namespace AO_SP_Export
@@ -13,8 +14,9 @@ namespace AO_SP_Export
     {
         private const string ConnectionStringNew = "Server=.;Integrated Security=true;Database=NieuwsoverzichtLite";
 
-        internal static void Run(Ezine ezine, string tableName, DateTime fromDate, bool addEzineTitleToItemTitle = false)
+        internal static void Run(Ezine ezine, string tableName, DateTime fromDate, bool addEzineTitleToItemTitle = false, bool createCsvOverview = false)
         {
+            var itemsRemoved = new List<EzineItem>();
             var titleSupplement = string.Empty;
             var ezineTitle = Exporter.GetEzineTitle(ezine);
 
@@ -24,9 +26,44 @@ namespace AO_SP_Export
             }
 
             // Get some items from the database
-            var ezineItemsForExport = Exporter.GetItems(ezine, fromDate, titleSupplement);
-            
-            SaveItems(tableName, ezineItemsForExport);
+            var ezineItemsForExport = Exporter.GetItems(ezine, fromDate, titleSupplement, out itemsRemoved);
+
+            if (createCsvOverview)
+            {
+                var fileName = $"C:\\temp\\ezines\\overzichten\\Overzicht_{tableName}.csv";
+                var fileContent = new List<string>();
+
+                if (!File.Exists(fileName))
+                {
+                    var header = "Ezine;InExport;ItemId;ItemTitle;CreatedOn;ModifiedOn;Tags;Url";
+                    fileContent.Add(header);
+                }
+
+                foreach (var item in ezineItemsForExport)
+                {
+                    var fileLine = $"{ezineTitle};1;{item.Id};{item.Title.Replace(";", "")};{item.CreatedOn};{item.ModifiedOn};{item.TagValue.Replace(";", "")};http://amsmartsite.amsterdam.allenovery.com/ItemShow.aspx?itemId={item.Id}";
+                    fileContent.Add(fileLine);
+                }
+
+                foreach (var item in itemsRemoved)
+                {
+                    var fileLine = $"{ezineTitle};0;{item.Id};{item.Title.Replace(";", "")};{item.CreatedOn};{item.ModifiedOn};;http://amsmartsite.amsterdam.allenovery.com/ItemShow.aspx?itemId={item.Id}";
+                    fileContent.Add(fileLine);
+                }
+
+                if (File.Exists(fileName))
+                {
+                    File.AppendAllLines(fileName, fileContent);
+                }
+                else
+                {
+                    File.WriteAllLines(fileName, fileContent);
+                }
+            }
+            else
+            {
+                SaveItems(tableName, ezineItemsForExport);
+            }
         }
 
         internal static List<EzineItem> SaveItems(string tableName, List<EzineItem> ezineItems)
@@ -115,7 +152,8 @@ VALUES (@title, @content, @authorEmail, @imageFileName, @tagValue, @createdOn, @
                             {
                                 var newHeight = (orgWidth / newWidth) * orgHeight;
 
-                                if (orgWidth > newWidth) {
+                                if (orgWidth > newWidth)
+                                {
                                     newHeight = (newWidth / orgWidth) * orgHeight;
                                 }
 
