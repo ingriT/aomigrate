@@ -136,7 +136,12 @@ namespace AO_SP_Export
 
             if (!string.IsNullOrEmpty(imageFileName))
             {
-                this.ImageFileNameUrl = Guid.NewGuid().ToString().Substring(0, 8) + ImageFileName;
+                this.ImageFileNameUrl = Guid.NewGuid().ToString().Substring(0, 8) + imageFileName;
+
+                if (!ImageFileNameUrl.Contains("."))
+                {
+                    this.ImageFileNameUrl = this.ImageFileNameUrl + ".jpg";
+                }
             }
             else
             {

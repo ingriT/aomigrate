@@ -93,6 +93,7 @@ ORDER BY i.CreatedDate DESC";
         private static string ReplaceTagsAndCheckIfImport(Ezine ezine, List<string> tagValues)
         {
             var newTags = new List<string>();
+            var doNotImportItem = false;
 
             if (ezine == Ezine.Bibliotheek)
             {
@@ -107,6 +108,7 @@ ORDER BY i.CreatedDate DESC";
                 {
                     if (tagsToRemove.Contains(tagValue, StringComparer.InvariantCultureIgnoreCase))
                     {
+                        doNotImportItem = true;
                         continue;
                     }
 
@@ -126,6 +128,11 @@ ORDER BY i.CreatedDate DESC";
                         newTags.Add(tagValue);
                     }
                 }
+            }
+
+            if (!doNotImportItem && newTags.Count == 0)
+            {
+                newTags.Add("NoCategory");
             }
 
             var output = string.Empty;
