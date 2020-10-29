@@ -14,7 +14,8 @@ namespace AO_SP_Export
     {
         private const string ConnectionStringNew = "Server=.;Integrated Security=true;Database=NieuwsoverzichtLite";
 
-        internal static void Run(Ezine ezine, string tableName, DateTime fromDate, bool addEzineTitleToItemTitle = false, bool createCsvOverview = false)
+        internal static void Run(Ezine ezine, string tableName, DateTime fromDate, bool addEzineTitleToItemTitle = false, bool createCsvOverview = false,
+            bool createOverviewTable = false)
         {
             var itemsRemoved = new List<EzineItem>();
             var titleSupplement = string.Empty;
@@ -62,11 +63,11 @@ namespace AO_SP_Export
             }
             else
             {
-                SaveItems(tableName, ezineItemsForExport);
+                SaveItems(tableName, ezineItemsForExport, createOverviewTable, ezine);
             }
         }
 
-        internal static List<EzineItem> SaveItems(string tableName, List<EzineItem> ezineItems)
+        internal static List<EzineItem> SaveItems(string tableName, List<EzineItem> ezineItems, bool createOverviewTable, Ezine ezine)
         {
             var output = new List<EzineItem>();
 
@@ -93,94 +94,143 @@ CREATE TABLE {tableName} (
 END
 ";
 
+                if (createOverviewTable)
+                {
+                    sql = $@"
+IF (NOT EXISTS (SELECT * 
+                 FROM INFORMATION_SCHEMA.TABLES 
+                 WHERE TABLE_SCHEMA = 'dbo' 
+                 AND  TABLE_NAME = 'OverzichtTabel'))
+BEGIN
+
+CREATE TABLE OverzichtTabel (
+    Id INT IDENTITY (1,1),
+    ItemId INT NOT NULL,
+    TableName VARCHAR(MAX),
+    Ezine VARCHAR(MAX),
+    Title VARCHAR(MAX),
+    AuthorEmail VARCHAR(MAX),
+    TagValue VARCHAR(MAX),
+    CreatedOn DATETIME,
+    ModifiedOn DATETIME
+)
+
+END
+";
+                }
+
                 connection.Execute(sql);
 
                 foreach (var item in ezineItems)
                 {
-                    var imageFileName = "";
-
-                    if (!string.IsNullOrEmpty(item.ImageFileName))
+                    if (createOverviewTable)
                     {
-                        imageFileName = $"<img src=\"http://global.intranet.allenovery.com/locations/europe/netherlands/publishingimages/{item.ImageFileNameUrl}\" />";
-                    }
+                        sql = $@"
+INSERT INTO OverzichtTabel (ItemId, TableName, Ezine, Title, AuthorEmail, TagValue, CreatedOn, ModifiedOn)
+VALUES (@itemId, @tableName, @ezine, @title, @authorEmail, @tagValue, @createdOn, @modifiedOn)";
 
-                    sql = $@"
+                        connection.Execute(sql, new
+                        {
+                            itemId = item.Id,
+                            tableName = tableName,
+                            ezine = ezine.ToString(),
+                            title = item.Title,
+                            authorEmail = item.AuthorEmail,
+                            tagValue = item.TagValue,
+                            createdOn = item.CreatedOn,
+                            modifiedOn = item.ModifiedOn
+                        });
+                    }
+                    else
+                    {
+                        var imageFileName = "";
+
+                        if (!string.IsNullOrEmpty(item.ImageFileName))
+                        {
+                            imageFileName = $"<img src=\"http://global.intranet.allenovery.com/locations/europe/netherlands/publishingimages/{item.ImageFileNameUrl}\" />";
+                        }
+
+                        sql = $@"
 INSERT INTO {tableName} (Title, Content, AuthorEmail, [Image], TagValue, CreatedOn, ModifiedOn)
 VALUES (@title, @content, @authorEmail, @imageFileName, @tagValue, @createdOn, @modifiedOn)";
 
-                    connection.Execute(sql, new
-                    {
-                        title = item.Title,
-                        content = item.Content,
-                        authorEmail = item.AuthorEmail,
-                        imageFileName = imageFileName,
-                        tagValue = item.TagValue,
-                        createdOn = item.CreatedOn,
-                        modifiedOn = item.ModifiedOn
-                    });
-                }
-
-                var filePath = @"C:\temp\ezines\archief\";
-                var imagePath = @"C:\temp\ezines\images\";
-
-                if (!Directory.Exists(filePath))
-                {
-                    Directory.CreateDirectory(filePath);
-                }
-                if (!Directory.Exists(imagePath))
-                {
-                    Directory.CreateDirectory(imagePath);
-                }
-
-                foreach (var item in ezineItems)
-                {
-                    if (!string.IsNullOrEmpty(item.ImageFileNameUrl))
-                    {
-                        if (File.Exists(imagePath + item.ImageFileNameUrl))
+                        connection.Execute(sql, new
                         {
-                            throw new Exception($"{item.ImageFileNameUrl} file exists!");
-                        }
+                            title = item.Title,
+                            content = item.Content,
+                            authorEmail = item.AuthorEmail,
+                            imageFileName = imageFileName,
+                            tagValue = item.TagValue,
+                            createdOn = item.CreatedOn,
+                            modifiedOn = item.ModifiedOn
+                        });
+                    }
+                }
 
-                        using (var image = Image.Load(item.ImageData))
-                        {
-                            var orgWidth = image.Width;
-                            var orgHeight = image.Height;
+                if (!createOverviewTable)
+                {
+                    var filePath = @"C:\temp\ezines\archief\";
+                    var imagePath = @"C:\temp\ezines\images\";
 
-                            var newWidth = 124;
-
-                            if (orgWidth != newWidth)
-                            {
-                                var newHeight = (orgWidth / newWidth) * orgHeight;
-
-                                if (orgWidth > newWidth)
-                                {
-                                    newHeight = (newWidth / orgWidth) * orgHeight;
-                                }
-
-                                image.Mutate(x => x.Resize(newWidth, newHeight));
-
-                                image.Save(imagePath + item.ImageFileNameUrl);
-                            }
-                            else
-                            {
-                                using (var fs = new FileStream(imagePath + item.ImageFileNameUrl, FileMode.Create, FileAccess.Write))
-                                {
-                                    fs.Write(item.ImageData, 0, item.ImageData.Length);
-                                }
-                            }
-                        }
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+                    if (!Directory.Exists(imagePath))
+                    {
+                        Directory.CreateDirectory(imagePath);
                     }
 
-                    foreach (var attachment in item.Attachments)
+                    foreach (var item in ezineItems)
                     {
-                        if (File.Exists(filePath + attachment.FileNameUrl))
+                        if (!string.IsNullOrEmpty(item.ImageFileNameUrl))
                         {
-                            throw new Exception($"{attachment.FileNameUrl} file exists!");
+                            if (File.Exists(imagePath + item.ImageFileNameUrl))
+                            {
+                                throw new Exception($"{item.ImageFileNameUrl} file exists!");
+                            }
+
+                            using (var image = Image.Load(item.ImageData))
+                            {
+                                var orgWidth = image.Width;
+                                var orgHeight = image.Height;
+
+                                var newWidth = 124;
+
+                                if (orgWidth != newWidth)
+                                {
+                                    var newHeight = (orgWidth / newWidth) * orgHeight;
+
+                                    if (orgWidth > newWidth)
+                                    {
+                                        newHeight = (newWidth / orgWidth) * orgHeight;
+                                    }
+
+                                    image.Mutate(x => x.Resize(newWidth, newHeight));
+
+                                    image.Save(imagePath + item.ImageFileNameUrl);
+                                }
+                                else
+                                {
+                                    using (var fs = new FileStream(imagePath + item.ImageFileNameUrl, FileMode.Create, FileAccess.Write))
+                                    {
+                                        fs.Write(item.ImageData, 0, item.ImageData.Length);
+                                    }
+                                }
+                            }
                         }
 
-                        using (var fs = new FileStream(filePath + attachment.FileNameUrl, FileMode.Create, FileAccess.Write))
+                        foreach (var attachment in item.Attachments)
                         {
-                            fs.Write(attachment.FileData, 0, attachment.FileData.Length);
+                            if (File.Exists(filePath + attachment.FileNameUrl))
+                            {
+                                throw new Exception($"{attachment.FileNameUrl} file exists!");
+                            }
+
+                            using (var fs = new FileStream(filePath + attachment.FileNameUrl, FileMode.Create, FileAccess.Write))
+                            {
+                                fs.Write(attachment.FileData, 0, attachment.FileData.Length);
+                            }
                         }
                     }
                 }
