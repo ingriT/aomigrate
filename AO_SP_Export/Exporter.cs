@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Web;
 using static AO_SP_Export.Program;
 
 namespace AO_SP_Export
@@ -347,7 +348,7 @@ ORDER BY it.CreatedDate DESC";
 
             foreach (var tag in tags)
             {
-                tagValues.Add(tag.TagValue.Trim());
+                tagValues.Add(HttpUtility.HtmlDecode(tag.TagValue.Trim()));
             }
 
             return tagValues;
