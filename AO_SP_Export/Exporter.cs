@@ -45,12 +45,12 @@ FROM vwItems i
 	INNER JOIN [types] t on i.typeid = t.TypeID
 	INNER JOIN vwItemRelations ir ON ir.IDTo = i.ItemID
 	INNER JOIN vwItems iParent ON iParent.ItemId = ir.IDFrom
-	INNER JOIN vwUsers u ON u.UserId = i.CreatedUserID
+	LEFT JOIN Users u ON u.UserId = i.CreatedUserID
 	LEFT JOIN vwImages images ON i.ImageGUID = images.ImageGUID
 	LEFT JOIN vwItemTextData itd ON itd.ItemId = i.ItemID
     LEFT JOIN vwItemExtraProperties iep ON iep.ItemId = i.ItemId AND iep.Code = 'PUBLISHDATE'
 WHERE t.Code = 'EZINE_ITEM' AND iParent.ItemId = @ezineId AND i.CreatedDate >= @fromDate
-ORDER BY COALESCE(PublishDate, COALESCE(i.ModifiedDate, i.CreatedDate)) DESC";
+ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
 
                 var items = connection.Query(sql, new { ezineId = (int)ezine, fromDate = fromDate }).ToList();
 
@@ -148,6 +148,11 @@ ORDER BY COALESCE(PublishDate, COALESCE(i.ModifiedDate, i.CreatedDate)) DESC";
                 }
 
                 output += tag;
+            }
+
+            if (output.Contains("Presentaties intern") && output.Contains(","))
+            {
+                output = "Presentaties intern";
             }
 
             return output;
@@ -318,7 +323,7 @@ ORDER BY COALESCE(PublishDate, COALESCE(i.ModifiedDate, i.CreatedDate)) DESC";
 
             if (ezine == Ezine.LitigationOnline)
             {
-                tagsToRemove.AddRange(new List<string> { "A&O News", "Financial publications", "Mededeling", "Nieuw in KH systeem en Lit. Online",
+                tagsToRemove.AddRange(new List<string> { "A&amp;O News", "A&O News", "Financial publications", "Mededeling", "Nieuw in KH systeem en Lit. Online",
                     "Nieuw op de Know-How site", "Nieuwe producten", "Nieuws algemeen", "Nieuwsberichten" });
             }
             else if (ezine == Ezine.CorporateKnowHowAlert)

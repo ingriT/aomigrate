@@ -168,7 +168,7 @@ VALUES (@title, @content, @authorEmail, @imageFileName, @tagValue, @createdOn, @
                             imageFileName = imageFileName,
                             tagValue = item.TagValue,
                             createdOn = item.CreatedOn,
-                            modifiedOn = item.ModifiedOn
+                            modifiedOn = item.ModifiedOn,
                             publishDate = item.PublishDate,
                             date = item.Date
                         });
