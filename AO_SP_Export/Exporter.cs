@@ -39,7 +39,8 @@ SELECT
     i.ModifiedDate, 
     u.Email AS Author, 
     images.[Data] AS ImageData, 
-    images.[FileName] AS ImageFileName
+    images.[FileName] AS ImageFileName,
+    iep.DateTimeValue AS PublishDate
 FROM vwItems i
 	INNER JOIN [types] t on i.typeid = t.TypeID
 	INNER JOIN vwItemRelations ir ON ir.IDTo = i.ItemID
@@ -47,8 +48,9 @@ FROM vwItems i
 	INNER JOIN vwUsers u ON u.UserId = i.CreatedUserID
 	LEFT JOIN vwImages images ON i.ImageGUID = images.ImageGUID
 	LEFT JOIN vwItemTextData itd ON itd.ItemId = i.ItemID
+    LEFT JOIN vwItemExtraProperties iep ON iep.ItemId = i.ItemId AND iep.Code = 'PUBLISHDATE'
 WHERE t.Code = 'EZINE_ITEM' AND iParent.ItemId = @ezineId AND i.CreatedDate >= @fromDate
-ORDER BY i.CreatedDate DESC";
+ORDER BY COALESCE(PublishDate, COALESCE(i.ModifiedDate, i.CreatedDate)) DESC";
 
                 var items = connection.Query(sql, new { ezineId = (int)ezine, fromDate = fromDate }).ToList();
 
@@ -68,7 +70,7 @@ ORDER BY i.CreatedDate DESC";
                         }
 
                         var ezineItem = new EzineItem(item.ItemId, item.Title + titleSupplement, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, newTags,
-                            item.CreatedDate, item.ModifiedDate, attachments);
+                            item.CreatedDate, item.ModifiedDate, item.PublishDate, attachments);
 
                         output.Add(ezineItem);
                     }
@@ -81,7 +83,7 @@ ORDER BY i.CreatedDate DESC";
                         }
 
                         var ezineItem = new EzineItem(item.ItemId, item.Title + titleSupplement, content, item.Description, item.Data, item.Author, item.ImageData, item.ImageFileName, newTags,
-                            item.CreatedDate, item.ModifiedDate, new List<ItemAttachment>());
+                            item.CreatedDate, item.ModifiedDate, item.PubishDate, new List<ItemAttachment>());
 
                         itemsRemoved.Add(ezineItem);
                     }

@@ -81,6 +81,8 @@ namespace AO_SP_Export
 
         internal readonly DateTime CreatedOn;
         internal readonly DateTime? ModifiedOn;
+        internal readonly DateTime? PublishDate;
+        internal readonly DateTime Date;
 
         internal readonly string Description;
         internal readonly string Data;
@@ -95,7 +97,7 @@ namespace AO_SP_Export
         internal readonly List<ItemAttachment> Attachments;
 
         internal EzineItem(int id, string title, string content, string description, string data, string authorEmail, byte[] imageData, string imageFileName, string tagValue,
-            DateTime createdOn, DateTime? modifiedOn, List<ItemAttachment> attachments)
+            DateTime createdOn, DateTime? modifiedOn, DateTime? publishDate, List<ItemAttachment> attachments)
         {
             this.Description = description;
             this.Data = data;
@@ -131,7 +133,7 @@ namespace AO_SP_Export
                     imageFileName = imageFileName.Substring(0, 110 - (extension.Length)) + extension;
                 }
             }
-            
+
             this.ImageFileName = imageFileName;
 
             if (!string.IsNullOrEmpty(imageFileName))
@@ -161,6 +163,9 @@ namespace AO_SP_Export
             this.ContentInnerText = StripHtml(content);
             this.CreatedOn = createdOn;
             this.ModifiedOn = modifiedOn;
+            this.PublishDate = publishDate;
+
+            this.Date = this.PublishDate.HasValue ? this.PublishDate.Value : (this.ModifiedOn.HasValue ? this.ModifiedOn.Value : this.CreatedOn);
 
             this.Author = "13590";
             this.ModiiedBy = Author;

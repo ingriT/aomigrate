@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
-using System.Text;
+
 using static AO_SP_Export.Program;
 
 namespace AO_SP_Export
@@ -88,7 +88,9 @@ CREATE TABLE {tableName} (
     [Image] VARCHAR(MAX),
     TagValue VARCHAR(MAX),
     CreatedOn DATETIME,
-    ModifiedOn DATETIME
+    ModifiedOn DATETIME,
+    PublishDate DATETIME,
+    [Date] DATETIME
 )
 
 END
@@ -112,7 +114,9 @@ CREATE TABLE OverzichtTabel (
     AuthorEmail VARCHAR(MAX),
     TagValue VARCHAR(MAX),
     CreatedOn DATETIME,
-    ModifiedOn DATETIME
+    ModifiedOn DATETIME,
+    PublishDate DATETIME,
+    [Date] DATETIME
 )
 
 END
@@ -126,8 +130,8 @@ END
                     if (createOverviewTable)
                     {
                         sql = $@"
-INSERT INTO OverzichtTabel (ItemId, TableName, Ezine, Title, AuthorEmail, TagValue, CreatedOn, ModifiedOn)
-VALUES (@itemId, @tableName, @ezine, @title, @authorEmail, @tagValue, @createdOn, @modifiedOn)";
+INSERT INTO OverzichtTabel (ItemId, TableName, Ezine, Title, AuthorEmail, TagValue, CreatedOn, ModifiedOn, PublishDate, [Date])
+VALUES (@itemId, @tableName, @ezine, @title, @authorEmail, @tagValue, @createdOn, @modifiedOn, @publishDate, @date)";
 
                         connection.Execute(sql, new
                         {
@@ -138,7 +142,9 @@ VALUES (@itemId, @tableName, @ezine, @title, @authorEmail, @tagValue, @createdOn
                             authorEmail = item.AuthorEmail,
                             tagValue = item.TagValue,
                             createdOn = item.CreatedOn,
-                            modifiedOn = item.ModifiedOn
+                            modifiedOn = item.ModifiedOn,
+                            publishDate = item.PublishDate,
+                            date = item.Date
                         });
                     }
                     else
@@ -151,8 +157,8 @@ VALUES (@itemId, @tableName, @ezine, @title, @authorEmail, @tagValue, @createdOn
                         }
 
                         sql = $@"
-INSERT INTO {tableName} (Title, Content, AuthorEmail, [Image], TagValue, CreatedOn, ModifiedOn)
-VALUES (@title, @content, @authorEmail, @imageFileName, @tagValue, @createdOn, @modifiedOn)";
+INSERT INTO {tableName} (Title, Content, AuthorEmail, [Image], TagValue, CreatedOn, ModifiedOn, PublishDate, [Date])
+VALUES (@title, @content, @authorEmail, @imageFileName, @tagValue, @createdOn, @modifiedOn, @publishDate, @date)";
 
                         connection.Execute(sql, new
                         {
@@ -163,6 +169,8 @@ VALUES (@title, @content, @authorEmail, @imageFileName, @tagValue, @createdOn, @
                             tagValue = item.TagValue,
                             createdOn = item.CreatedOn,
                             modifiedOn = item.ModifiedOn
+                            publishDate = item.PublishDate,
+                            date = item.Date
                         });
                     }
                 }

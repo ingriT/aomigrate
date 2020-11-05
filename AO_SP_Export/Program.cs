@@ -8,7 +8,7 @@ namespace AO_SP_Export
         {
             var createPdf = false;
             var createCsvOverview = false;
-            var createOverviewTable = true;
+            var createOverviewTable = false;
 
             if (createPdf)
             {
