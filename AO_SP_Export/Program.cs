@@ -19,7 +19,7 @@ namespace AO_SP_Export
                 var fromStart = DateTime.Now.AddYears(-20);
                 var lastYear = DateTime.Now.AddMonths(-15);
 
-                /*DBImporter.Run(Ezine.AllenOveryVakpublicaties, "R_L", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
+                DBImporter.Run(Ezine.AllenOveryVakpublicaties, "R_L", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
                 DBImporter.Run(Ezine.AmsterdamOfficeNews, "BD_M", lastYear, true, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
                 DBImporter.Run(Ezine.AmsterdamWallArt, "Amsterdam_Wall_Art", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
                 DBImporter.Run(Ezine.AmsterdamseNieuwsoverzicht, "BD_M", lastYear, true, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
@@ -28,13 +28,13 @@ namespace AO_SP_Export
                 DBImporter.Run(Ezine.CorporateKnowHowAlert, "NL_Corporate", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
                 DBImporter.Run(Ezine.EmploymentOnline, "NL_Employment", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
                 DBImporter.Run(Ezine.HRBerichten, "HR", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
-                DBImporter.Run(Ezine.LearningAndDevelopmentOnline, "HR_L_D", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);*/
+                DBImporter.Run(Ezine.LearningAndDevelopmentOnline, "HR_L_D", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
                 DBImporter.Run(Ezine.LitigationOnline, "NL_Litigation", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
-                /*DBImporter.Run(Ezine.MediaAndExposure, "BD_M", lastYear, true, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
-                DBImporter.Run(Ezine.MTMededelingen, "MT", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
+                DBImporter.Run(Ezine.MediaAndExposure, "BD_M", lastYear, true, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
+                DBImporter.Run(Ezine.MTMededelingen, "HR", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
                 DBImporter.Run(Ezine.Ondernemingsraad, "Ondernemingsraad", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
                 DBImporter.Run(Ezine.SponsoringEnCSR, "BD_M", lastYear, true, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
-                DBImporter.Run(Ezine.TaxAlert, "NL_Tax", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);*/
+                DBImporter.Run(Ezine.TaxAlert, "NL_Tax", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
             }
         }
 

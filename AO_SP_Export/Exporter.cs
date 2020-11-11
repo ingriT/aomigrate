@@ -135,7 +135,22 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
 
             if (!doNotImportItem && newTags.Count == 0)
             {
-                newTags.Add("NoCategory");
+                if (ezine == Ezine.HRBerichten)
+                {
+                    newTags.Add("Berichten van HR");
+                }
+                else if (ezine == Ezine.MTMededelingen)
+                {
+                    newTags.Add("MT mededelingen");
+                }
+                else if (ezine == Ezine.Ondernemingsraad)
+                {
+                    newTags.Add("OR bericht");
+                }
+                else
+                {
+                    newTags.Add("NoCategory");
+                }
             }
 
             var output = string.Empty;
@@ -153,7 +168,7 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                 */
                 if (newTags.Count > 1)
                 {
-                    foreach(var newTag in newTags)
+                    foreach (var newTag in newTags)
                     {
                         if (newTag.ToLower().Contains("w-belastingplan"))
                         {
