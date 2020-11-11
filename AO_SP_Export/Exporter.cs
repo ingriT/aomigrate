@@ -198,6 +198,10 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
             {
                 output = "Presentaties intern";
             }
+            else if (output.StartsWith("Wet- en regelgeving update, Signaleringen Ontwikkelingen"))
+            {
+                output = "Wet- en regelgeving update";
+            }
 
             return output;
         }
@@ -208,21 +212,21 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
 
             if (ezine == Ezine.LitigationOnline)
             {
-                tagsToReplace.Add("Aanwinsten", "Aanwinsten literatuur");
+                tagsToReplace.Add("Aanwinsten", "Aanwinsten literatuur PG");
                 tagsToReplace.Add("Class actions", "Class actions");
-                tagsToReplace.Add("E-alerts Litigation", "E-alerts Litigation");
+                tagsToReplace.Add("E-alerts Litigation", "E-Alerts PG Litigation");
                 tagsToReplace.Add("Engelse taal", "Engelse taal");
                 tagsToReplace.Add("Griffierecht", "Griffierechten en kosten");
                 tagsToReplace.Add("Jurisprudentiebundels", "Jurisprudentiebundels");
-                tagsToReplace.Add("Know how", "Know how");
-                tagsToReplace.Add("Know how berichten", "Know how");
+                tagsToReplace.Add("Know how", "Presentaties intern");
+                tagsToReplace.Add("Know how berichten", "Presentaties intern");
                 tagsToReplace.Add("Nieuws algemeen", "PG-nieuws");
-                tagsToReplace.Add("Presentaties Arbitration Group Amsterdam (AGA) ", "Presentaties AGA");
+                tagsToReplace.Add("Presentaties Arbitration Group Amsterdam (AGA) ", "AGA");
                 tagsToReplace.Add("Presentaties extern", "Presentatie extern");
                 tagsToReplace.Add("Presentaties Know How Bijeenkomsten", "Presentaties intern");
                 tagsToReplace.Add("Presentaties Litigation Academy", "Presentaties intern");
                 tagsToReplace.Add("Publicaties Litigation", "Publicaties Litigation");
-                tagsToReplace.Add("Seminar Uitspraak Gemist", "Seminar Uitspraak Gemist");
+                tagsToReplace.Add("Seminar Uitspraak Gemist", "Uitspraak gemist seminars");
                 tagsToReplace.Add("Signalering", "Signaleringen Ontwikkelingen");
                 tagsToReplace.Add("Wet- en regelgeving update", "Wet- en regelgeving update");
                 tagsToReplace.Add("Wetsvoorstellen", "Wet- en regelgeving update");
