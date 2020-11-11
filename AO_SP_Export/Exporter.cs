@@ -140,6 +140,35 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
 
             var output = string.Empty;
 
+            if (ezine == Ezine.TaxAlert)
+            {
+                /* 
+                 * Uitgaande van het feit dat de volgorde van de tags zijn ontstaan door de volgorde van toekenning ervan door de editor en we dus niet in de 
+                 * problemen komen als we de 1e categorie kiezen om toe te kennen en dan vervolgens hetzelfde item weer tegenkomen met een andere 1e categorie het volgende:
+                 * Wat vind je van de volgende regels:
+                 * - Als een item meerder categorieën heeft dan krijgt het item de categorie toegekend dat als  eerste genoemd wordt. Dit voorkomt lange rijen
+                 *   categorie-regels met meerdere categorieën zoals nu is te zien in de Tax export.
+                 * - Bovengenoemde regel geldt NIET als er in 1 van de categorieën een VT: W-Belastingplan [JAARTAL] voorkomt. In dat geval valt het item onder het
+                 *   genoemde belastingplan.
+                */
+                if (newTags.Count > 1)
+                {
+                    foreach(var newTag in newTags)
+                    {
+                        if (newTag.ToLower().Contains("w-belastingplan"))
+                        {
+                            newTags.Clear();
+                            newTags.Add(newTag);
+                            break;
+                        }
+                    }
+
+                    var firstTag = newTags.First();
+                    newTags.Clear();
+                    newTags.Add(firstTag);
+                }
+            }
+
             foreach (var tag in newTags)
             {
                 if (!string.IsNullOrEmpty(output))
@@ -211,6 +240,7 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
             {
                 tagsToReplace.Add("Agenda literatuuroverleg", "Agenda literatuuroverleg");
                 tagsToReplace.Add("Arrestenoverzicht", "Arresten hoge raad");
+                tagsToReplace.Add("Belastingdienst", "Belastingdienst en aangiften");
                 tagsToReplace.Add("Belastingdienst en aangiften", "Belastingdienst en aangiften");
                 tagsToReplace.Add("Beconberichten", "Belastingdienst en aangiften");
                 tagsToReplace.Add("Kantoor", "Belastingdienst en aangiften");
@@ -218,19 +248,26 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                 tagsToReplace.Add("GT EU Deveopments", "Belastingdienst en aangiften");
                 tagsToReplace.Add("GT Germany", "Belastingdienst en aangiften");
                 tagsToReplace.Add("Conferenties / symposia  / seminars", "Conferenties symposia en seminars");
+                tagsToReplace.Add("Conferenties/ symposia  /seminars", "Conferenties symposia en seminars");
+                tagsToReplace.Add("Conferenties/symposia/seminars", "Conferenties symposia en seminars");
+                tagsToReplace.Add("Conferenties/ symposia/seminars", "Conferenties symposia en seminars");
                 tagsToReplace.Add("Opleidingen", "Conferenties symposia en seminars");
                 tagsToReplace.Add("Presentaties", "Conferenties symposia en seminars");
                 tagsToReplace.Add("Seminars", "Conferenties symposia en seminars");
                 tagsToReplace.Add("E-Alerts", "eAlerts");
+                tagsToReplace.Add("e-Alert", "eAlerts");
                 tagsToReplace.Add("Fiscaal overleg andere kantoren", "Fiscaal overleg andere kantoren");
                 tagsToReplace.Add("Global layer friends", "Global layer friends");
                 tagsToReplace.Add("IBFD", "IBFD _ Nieuwe artikelen");
                 tagsToReplace.Add("Know How berichten", "Know how berichten");
                 tagsToReplace.Add("Know how nieuws", "Know how berichten");
                 tagsToReplace.Add("Know how overleg", "Know how berichten");
+                tagsToReplace.Add("Know-How overleg", "Know how berichten");
                 tagsToReplace.Add("Kantoor algemeen", "Know how berichten");
                 tagsToReplace.Add("Tips & tricks", "Know how berichten");
+                tagsToReplace.Add("Tips &amp; tricks", "Know how berichten");
                 tagsToReplace.Add("Loyens & Loeff Tax alerts", "Know how berichten");
+                tagsToReplace.Add("Loyens &amp; Loeff Tax alerts", "Know how berichten");
                 tagsToReplace.Add("Hoge Raad", "Know how berichten");
                 tagsToReplace.Add("Landen Nieuws", "Landen Nieuws");
                 tagsToReplace.Add("Newsletters", "Landen Nieuws");
@@ -278,7 +315,7 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                 tagsToReplace.Add("VT: EU", "VT EU");
                 tagsToReplace.Add("VT: FACTA", "VT FACTA");
                 tagsToReplace.Add("VT: Formeel", "VT Formeel");
-                tagsToReplace.Add("VT: Fraus legis", "VT Fraus legis");
+                tagsToReplace.Add("VT: Formeel Fraus legis", "VT Fraus legis");
                 tagsToReplace.Add("VT: FTT", "VT FTT");
                 tagsToReplace.Add("VT: Fusies en overnames", "VT Fusies en overnames");
                 tagsToReplace.Add("VT: Inkomstenbelasting", "VT Inkomstenbelasting");
@@ -286,6 +323,7 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                 tagsToReplace.Add("VT: LB Excessieve beloningen", "VT LB Excessieve beloningen");
                 tagsToReplace.Add("VT: Loonbelasting", "VT Loonbelasting");
                 tagsToReplace.Add("VT: M&A", "VT M&A");
+                tagsToReplace.Add("VT: M&amp;A", "VT M&A");
                 tagsToReplace.Add("VT: Mandatory disclosure", "VT Mandatory disclosure");
                 tagsToReplace.Add("VT: MLI", "VT MLI");
                 tagsToReplace.Add("VT: OESO", "VT OESO");
@@ -294,18 +332,19 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                 tagsToReplace.Add("VT: Real estate", "VT Real estate");
                 tagsToReplace.Add("VT: Rulings", "VT Rulings");
                 tagsToReplace.Add("VT: Sociale zekerheid", "VT Sociale zekerheid");
-                tagsToReplace.Add("VT:taxtreaties", "VTtaxtreaties");
-                tagsToReplace.Add("VT:tier 1", "VTtier 1");
-                tagsToReplace.Add("VT:transfer pricing", "VTtransfer pricing");
+                tagsToReplace.Add("VT: Tax Treaties", "VT Tax Treaties");
+                tagsToReplace.Add("VT: Tier1", "VT Tier1");
+                tagsToReplace.Add("VT: Transfer pricing", "VT Transfer Pricing");
                 tagsToReplace.Add("VT: Verschoningsrecht", "VT Verschoningsrecht");
                 tagsToReplace.Add("VT: VPB", "VT VPB");
-                tagsToReplace.Add("VT: VPB (niet)transparantie", "VT VPB (niet)transparantie");
+                tagsToReplace.Add("VT: VPB (Niet) transparantie", "VT VPB (Niet) transparantie");
                 tagsToReplace.Add("VT: VPB 30% regeling", "VT VPB 30% regeling");
-                tagsToReplace.Add("VT: VPB Beleggingsinstellinge", "VT VPB Beleggingsinstellinge");
-                tagsToReplace.Add("VT: VPB Deelneminsgvrijstellig", "VT VPB Deelneminsgvrijstellig");
+                tagsToReplace.Add("VT: Vpb Beleggingsinstellingen", "VT VPB Beleggingsinstellingen");
+                tagsToReplace.Add("VT: VPB Deelnemingsvrijstelling", "VT VPB Deelnemingsvrijstelling");
                 tagsToReplace.Add("VT: VPB FGR", "VT VPB FGR");
-                tagsToReplace.Add("VT: VPB Fiscale eenheid", "VT VPB Fiscale eenheid");
-                tagsToReplace.Add("VT: VPB RE investmenttrust (REITs)", "VT VPB RE investmenttrust REITs");
+                tagsToReplace.Add("VT: VPB Fiscale eenheid", "VT VPB Fiscal" +
+                    "e eenheid");
+                tagsToReplace.Add("VT: Vpb RE Investment Trusts (REITs)", "VT VPB RE Investment Trusts (REITs)");
                 tagsToReplace.Add("VT: VPB Rente aftrek", "VT VPB Rente aftrek");
                 tagsToReplace.Add("VT: Wetsvoorstellen", "VT Wetsvoorstellen");
                 tagsToReplace.Add("VTO", "VTO");

@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Web;
 
 namespace AO_SP_Export
 {
@@ -158,7 +159,7 @@ namespace AO_SP_Export
             content = AddAttachments(content, attachments);
 
             this.Id = id;
-            this.Title = title + " - " + tagValue;
+            this.Title = HttpUtility.HtmlDecode(title + " - " + tagValue);
             this.Content = content;
             this.ContentInnerText = StripHtml(content);
             this.CreatedOn = createdOn;
