@@ -246,14 +246,14 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                 tagsToReplace.Add("Actuele uitspraken", "Jurisprudentie");
                 tagsToReplace.Add("Know How Nieuws", "Know How Nieuws");
                 tagsToReplace.Add("SFP's", "SFP's");
-                tagsToReplace.Add("AFM", "Wet- en Regelgeving Update");
-                tagsToReplace.Add("AFM berichten", "Wet- en Regelgeving Update");
-                tagsToReplace.Add("AIFM Richtlijn", "Wet- en Regelgeving Update");
-                tagsToReplace.Add("Beloning", "Wet- en Regelgeving Update");
-                tagsToReplace.Add("Europees nieuws", "Wet- en Regelgeving Update");
-                tagsToReplace.Add("ESMA", "Wet- en Regelgeving Update");
-                tagsToReplace.Add("Legislation", "Wet- en Regelgeving Update");
-                tagsToReplace.Add("Wetsvoorstellen", "Wet- en Regelgeving Update");
+                tagsToReplace.Add("AFM", "Wet- en Regelgeving");
+                tagsToReplace.Add("AFM berichten", "Wet- en Regelgeving");
+                tagsToReplace.Add("AIFM Richtlijn", "Wet- en Regelgeving");
+                tagsToReplace.Add("Beloning", "Wet- en Regelgeving");
+                tagsToReplace.Add("Europees nieuws", "Wet- en Regelgeving");
+                tagsToReplace.Add("ESMA", "Wet- en Regelgeving");
+                tagsToReplace.Add("Legislation", "Wet- en Regelgeving");
+                tagsToReplace.Add("Wetsvoorstellen", "Wet- en Regelgeving");
             }
             else if (ezine == Ezine.TaxAlert)
             {
