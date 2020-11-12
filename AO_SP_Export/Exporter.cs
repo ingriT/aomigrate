@@ -102,6 +102,10 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
             {
                 newTags.Add("BibliotheekArchief");
             }
+            else if (ezine == Ezine.AllenOveryVakpublicaties)
+            {
+                newTags.Add("Vakpublicatie");
+            }
             else
             {
                 var tagsToRemove = GetTagsToRemove(ezine);
@@ -183,6 +187,18 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                     newTags.Add(firstTag);
                 }
             }
+            else if (ezine == Ezine.CorporateKnowHowAlert || ezine == Ezine.LitigationOnline)
+            {
+                /* 
+                 * All items with multiple categories will get only the category which has been selected first.
+                */
+                if (newTags.Count > 1)
+                {
+                    var firstTag = newTags.First();
+                    newTags.Clear();
+                    newTags.Add(firstTag);
+                }
+            }
 
             foreach (var tag in newTags)
             {
@@ -241,11 +257,14 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                 tagsToReplace.Add("e-Review", "e-Alert / eReview");
                 tagsToReplace.Add("Financiele instellingen", "Financial Regulatory");
                 tagsToReplace.Add("Financiele markten", "Financial Regulatory");
+                tagsToReplace.Add("Financiële instellingen", "Financial Regulatory");
+                tagsToReplace.Add("Financiële markten", "Financial Regulatory");
                 tagsToReplace.Add("Wft wetgeving", "Financial Regulatory");
                 tagsToReplace.Add("Hoge raad", "Jurisprudentie");
                 tagsToReplace.Add("Actuele uitspraken", "Jurisprudentie");
                 tagsToReplace.Add("Know How Nieuws", "Know How Nieuws");
-                tagsToReplace.Add("SFP's", "SFP's");
+                tagsToReplace.Add("SFP's", "SFP");
+                tagsToReplace.Add(HttpUtility.HtmlEncode("SFP's"), "SFP");
                 tagsToReplace.Add("AFM", "Wet- en Regelgeving");
                 tagsToReplace.Add("AFM berichten", "Wet- en Regelgeving");
                 tagsToReplace.Add("AIFM Richtlijn", "Wet- en Regelgeving");
@@ -392,7 +411,7 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
             {
                 tagsToRemove.AddRange(new List<string> { "Alle categorieen", "Belastingzaken", "Bericht", "Bibliotheek", "Brochures A&O", "English pointer",
                     "GT Journals", "Literatuur", "Newsletter fiscoloog", "Newsletter Int. Fiscale Actualiteit", "Nieuwe boeken", "Protocol AAFD", "Rechtsorde",
-                    "Scripties", "Tijdschriften"});
+                    "Scripties", "Tijdschriften", "Brochures A&amp;O", });
             }
 
             return tagsToRemove;
