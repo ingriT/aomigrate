@@ -237,7 +237,8 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                 tagsToReplace.Add("Know how", "Presentaties intern");
                 tagsToReplace.Add("Know how berichten", "Presentaties intern");
                 tagsToReplace.Add("Nieuws algemeen", "PG-nieuws");
-                tagsToReplace.Add("Presentaties Arbitration Group Amsterdam (AGA) ", "AGA");
+                tagsToReplace.Add("Presentaties Arbitration Group Amsterdam (AGA) ", "Presentaties AGA");
+                tagsToReplace.Add("Presentaties Arbitration Group Amsterdam (AGA)", "Presentaties AGA");
                 tagsToReplace.Add("Presentaties extern", "Presentatie extern");
                 tagsToReplace.Add("Presentaties Know How Bijeenkomsten", "Presentaties intern");
                 tagsToReplace.Add("Presentaties Litigation Academy", "Presentaties intern");
@@ -273,6 +274,7 @@ ORDER BY COALESCE(iep.DateTimeValue, i.CreatedDate) DESC";
                 tagsToReplace.Add("ESMA", "Wet- en Regelgeving");
                 tagsToReplace.Add("Legislation", "Wet- en Regelgeving");
                 tagsToReplace.Add("Wetsvoorstellen", "Wet- en Regelgeving");
+                tagsToReplace.Add("Wet- en Regelgeving Update", "Wet- en Regelgeving");
             }
             else if (ezine == Ezine.TaxAlert)
             {
