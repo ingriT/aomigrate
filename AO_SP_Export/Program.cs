@@ -17,7 +17,7 @@ namespace AO_SP_Export
             else
             {
                 var fromStart = DateTime.Now.AddYears(-20);
-                var lastYear = DateTime.Now.AddMonths(-15);
+                var lastYear = DateTime.Now.AddMonths(-16);
 
                 DBImporter.Run(Ezine.AllenOveryVakpublicaties, "R_L", fromStart, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
                 DBImporter.Run(Ezine.AmsterdamOfficeNews, "BD_M", lastYear, true, createCsvOverview: createCsvOverview, createOverviewTable: createOverviewTable);
